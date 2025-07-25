@@ -1,7 +1,7 @@
 # Multi-stage Dockerfile for production and development
 
 # Development stage
-FROM node:20-alpine AS development
+FROM node:24-alpine AS development
 
 WORKDIR /app
 
@@ -25,7 +25,7 @@ EXPOSE 3000 9229
 CMD ["npm", "run", "dev:debug"]
 
 # Builder stage for production
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -44,7 +44,7 @@ COPY src/ ./src/
 RUN npm run build
 
 # Production stage
-FROM node:20-alpine AS production
+FROM node:24-alpine AS production
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
