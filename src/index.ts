@@ -1,15 +1,15 @@
 /**
  * @fileoverview Main Express application entry point for the AI Content Curator Agent.
- * 
+ *
  * This file sets up the Express server with comprehensive middleware stack including:
  * - Security headers and CORS configuration
  * - Request logging and sanitization
  * - Health monitoring endpoints
  * - Error handling and graceful shutdown
- * 
+ *
  * The application follows a layered architecture with dependency injection
  * and provides RESTful APIs for content discovery and curation.
- * 
+ *
  * @author AI Content Curator Team
  * @since 1.0.0
  */
@@ -104,19 +104,19 @@ app.use(errorHandler);
 
 /**
  * Starts the Express server on the configured port.
- * 
+ *
  * Initializes the HTTP server and logs startup information including
  * port, environment, and log level for debugging purposes.
- * 
+ *
  * @returns {void}
- * 
+ *
  * @example
  * ```typescript
  * // Start the server
  * startServer();
  * // Server will be available at http://localhost:3000
  * ```
- * 
+ *
  * @since 1.0.0
  */
 const startServer = (): void => {

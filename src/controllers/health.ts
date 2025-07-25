@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { Injectable } from '@container/Container';
 import { BaseController } from '@controllers/index';
-import { container, REDIS_ADAPTER, CONFIG } from '@container/index';
-import type { ICacheAdapter } from '@adapters/redis';
+import { container, REDIS_ADAPTER, CONFIG, REDIS_HEALTH_SERVICE } from '@container/index';
+import type { CacheAdapter } from '@adapters/redis';
+import type { RedisHealthService } from '@services/redis-health';
 import type { AppConfig } from '@config/index';
 
 export interface HealthStatus {
@@ -40,12 +41,14 @@ export interface HealthStatus {
 
 @Injectable
 export class HealthController extends BaseController {
-  private redisAdapter: ICacheAdapter;
+  private redisAdapter: CacheAdapter;
+  private redisHealthService: RedisHealthService;
   private config: AppConfig;
 
   constructor() {
     super();
-    this.redisAdapter = container.resolve<ICacheAdapter>(REDIS_ADAPTER);
+    this.redisAdapter = container.resolve<CacheAdapter>(REDIS_ADAPTER);
+    this.redisHealthService = container.resolve<RedisHealthService>(REDIS_HEALTH_SERVICE);
     this.config = container.resolve<AppConfig>(CONFIG);
   }
 
@@ -145,46 +148,28 @@ export class HealthController extends BaseController {
     redis: HealthStatus['dependencies']['redis'];
     check: HealthStatus['checks'][0];
   }> {
-    const startTime = Date.now();
-    
     try {
-      // Test Redis connectivity with a simple operation
-      const testKey = 'health:check:' + Date.now();
-      const testValue = 'ok';
+      const healthResult = await this.redisHealthService.performHealthCheck();
       
-      await this.redisAdapter.set(testKey, testValue, 5); // 5 second TTL
-      const retrievedValue = await this.redisAdapter.get<string>(testKey);
-      await this.redisAdapter.delete(testKey);
+      const redisStatus = healthResult.details.connected ? 'connected' : 
+                         healthResult.status === 'degraded' ? 'error' : 'disconnected';
       
-      const latency = Date.now() - startTime;
-      
-      if (retrievedValue === testValue) {
-        return {
-          redis: {
-            status: 'connected',
-            latency,
-          },
-          check: {
-            name: 'redis',
-            status: 'pass',
-            details: `Connected with ${latency}ms latency`,
-            responseTime: latency,
-          },
-        };
-      } else {
-        return {
-          redis: {
-            status: 'error',
-            error: 'Data integrity check failed',
-          },
-          check: {
-            name: 'redis',
-            status: 'fail',
-            details: 'Data integrity check failed',
-            responseTime: Date.now() - startTime,
-          },
-        };
-      }
+      const checkStatus = healthResult.status === 'healthy' ? 'pass' :
+                         healthResult.status === 'degraded' ? 'warn' : 'fail';
+
+      return {
+        redis: {
+          status: redisStatus,
+          latency: healthResult.details.latency,
+          error: healthResult.details.errors?.join(', '),
+        },
+        check: {
+          name: 'redis',
+          status: checkStatus,
+          details: `Redis health: ${healthResult.status} (${healthResult.details.latency}ms)`,
+          responseTime: healthResult.responseTime,
+        },
+      };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       return {
@@ -195,8 +180,7 @@ export class HealthController extends BaseController {
         check: {
           name: 'redis',
           status: 'fail',
-          details: `Connection failed: ${errorMessage}`,
-          responseTime: Date.now() - startTime,
+          details: `Health check failed: ${errorMessage}`,
         },
       };
     }
@@ -229,19 +213,19 @@ export class HealthController extends BaseController {
         status: 'fail',
         details: `Critical memory usage: ${memory.percentage}%`,
       };
-    } else if (memory.percentage >= memoryThresholds.warning) {
+    }
+    if (memory.percentage >= memoryThresholds.warning) {
       return {
         name: 'memory',
         status: 'warn',
         details: `High memory usage: ${memory.percentage}%`,
       };
-    } else {
-      return {
-        name: 'memory',
-        status: 'pass',
-        details: `Normal memory usage: ${memory.percentage}%`,
-      };
     }
+    return {
+      name: 'memory',
+      status: 'pass',
+      details: `Normal memory usage: ${memory.percentage}%`,
+    };
   }
 
   private async getDiskInfo(): Promise<HealthStatus['dependencies']['disk'] | null> {
@@ -251,7 +235,9 @@ export class HealthController extends BaseController {
     return null;
   }
 
-  private checkDiskHealth(diskInfo: NonNullable<HealthStatus['dependencies']['disk']>): HealthStatus['checks'][0] {
+  private checkDiskHealth(
+    diskInfo: NonNullable<HealthStatus['dependencies']['disk']>
+  ): HealthStatus['checks'][0] {
     const diskThresholds = {
       warning: 80,
       critical: 95,
@@ -263,32 +249,32 @@ export class HealthController extends BaseController {
         status: 'fail',
         details: `Critical disk usage: ${diskInfo.percentage}%`,
       };
-    } else if (diskInfo.percentage >= diskThresholds.warning) {
+    }
+    if (diskInfo.percentage >= diskThresholds.warning) {
       return {
         name: 'disk',
         status: 'warn',
         details: `High disk usage: ${diskInfo.percentage}%`,
       };
-    } else {
-      return {
-        name: 'disk',
-        status: 'pass',
-        details: `Normal disk usage: ${diskInfo.percentage}%`,
-      };
     }
+    return {
+      name: 'disk',
+      status: 'pass',
+      details: `Normal disk usage: ${diskInfo.percentage}%`,
+    };
   }
 
   private determineOverallStatus(checks: HealthStatus['checks']): HealthStatus['status'] {
-    const hasFailures = checks.some(check => check.status === 'fail');
-    const hasWarnings = checks.some(check => check.status === 'warn');
+    const hasFailures = checks.some((check) => check.status === 'fail');
+    const hasWarnings = checks.some((check) => check.status === 'warn');
 
     if (hasFailures) {
       return 'unhealthy';
-    } else if (hasWarnings) {
-      return 'degraded';
-    } else {
-      return 'healthy';
     }
+    if (hasWarnings) {
+      return 'degraded';
+    }
+    return 'healthy';
   }
 
   private getHttpStatusCode(status: HealthStatus['status']): number {

@@ -10,6 +10,7 @@ export const TOKENS = {
   LOGGER: Symbol('Logger'),
 
   // Database
+  DATABASE_SERVICE: Symbol('DatabaseService'),
   DATABASE: Symbol('Database'),
   REDIS: Symbol('Redis'),
   REDIS_ADAPTER: Symbol('RedisAdapter'),
@@ -23,6 +24,8 @@ export const TOKENS = {
 
   // Core Services
   CACHE_SERVICE: Symbol('CacheService'),
+  CACHE_MANAGER: Symbol('CacheManager'),
+  REDIS_HEALTH_SERVICE: Symbol('RedisHealthService'),
   CONTENT_DISCOVERY_SERVICE: Symbol('ContentDiscoveryService'),
   TAGGING_SERVICE: Symbol('TaggingService'),
   RANKING_SERVICE: Symbol('RankingService'),
@@ -52,6 +55,7 @@ export const TOKENS = {
 export const {
   CONFIG,
   LOGGER,
+  DATABASE_SERVICE,
   DATABASE,
   REDIS,
   REDIS_ADAPTER,
@@ -61,6 +65,8 @@ export const {
   ACADEMIC_SEARCH,
   SOCIAL_MEDIA_MONITOR,
   CACHE_SERVICE,
+  CACHE_MANAGER,
+  REDIS_HEALTH_SERVICE,
   CONTENT_DISCOVERY_SERVICE,
   TAGGING_SERVICE,
   RANKING_SERVICE,

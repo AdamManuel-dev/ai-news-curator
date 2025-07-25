@@ -1,21 +1,21 @@
 import 'reflect-metadata';
 
 // Type for constructor functions
-type Constructor<T = {}> = new (...args: any[]) => T;
+type Constructor<T = object> = new (...args: unknown[]) => T;
 
 // Service metadata
 interface ServiceMetadata {
   singleton: boolean;
-  factory?: () => any;
+  factory?: () => unknown;
   dependencies?: symbol[];
 }
 
 // Service registry
 interface ServiceRegistry {
   [key: symbol]: {
-    implementation: Constructor<any> | (() => any);
+    implementation: Constructor<unknown> | (() => unknown);
     metadata: ServiceMetadata;
-    instance?: any;
+    instance?: unknown;
   };
 }
 
@@ -95,14 +95,14 @@ export class Container {
 
     // Return cached instance for singletons
     if (service.metadata.singleton && service.instance) {
-      return service.instance;
+      return service.instance as T;
     }
 
     let instance: T;
 
     // Handle factory functions
     if (service.metadata.factory) {
-      instance = service.metadata.factory();
+      instance = service.metadata.factory() as T;
     } else {
       // Handle constructor-based services
       const Constructor = service.implementation as Constructor<T>;

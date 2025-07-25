@@ -1,10 +1,10 @@
 /**
  * @fileoverview Redis adapter for caching operations in the AI Content Curator Agent.
- * 
+ *
  * Provides a Redis-based implementation of the cache adapter interface with
  * connection management, error handling, and comprehensive caching operations.
  * Supports both simple key-value operations and advanced Redis features.
- * 
+ *
  * @author AI Content Curator Team
  * @since 1.0.0
  */
@@ -17,11 +17,11 @@ import logger from '@utils/logger';
  * Interface defining the contract for cache adapter implementations.
  * Provides a consistent API for caching operations regardless of the
  * underlying storage technology (Redis, Memcached, in-memory, etc.).
- * 
- * @interface ICacheAdapter
+ *
+ * @interface CacheAdapter
  * @since 1.0.0
  */
-export interface ICacheAdapter {
+export interface CacheAdapter {
   /**
    * Establishes connection to the cache storage.
    * @returns {Promise<void>} Promise that resolves when connected
@@ -110,8 +110,9 @@ export interface ICacheAdapter {
   ttl(key: string): Promise<number>;
 }
 
-export class RedisAdapter implements ICacheAdapter {
+export class RedisAdapter implements CacheAdapter {
   private client: Redis;
+
   private connected = false;
 
   constructor() {

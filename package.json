@@ -13,7 +13,13 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
-    "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix"
+    "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
+    "prepare": "husky",
+    "migrate:up": "ts-node -r tsconfig-paths/register src/database/migration-cli.ts up",
+    "migrate:down": "ts-node -r tsconfig-paths/register src/database/migration-cli.ts down",
+    "migrate:status": "ts-node -r tsconfig-paths/register src/database/migration-cli.ts status",
+    "migrate:validate": "ts-node -r tsconfig-paths/register src/database/migration-cli.ts validate",
+    "migrate:create": "ts-node -r tsconfig-paths/register src/database/migration-cli.ts create"
   },
   "keywords": [],
   "author": "",
@@ -38,7 +44,9 @@
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prettier": "^5.5.3",
+    "husky": "^9.1.7",
     "jest": "^30.0.5",
+    "lint-staged": "^16.1.2",
     "nodemon": "^3.1.10",
     "prettier": "^3.6.2",
     "supertest": "^7.1.4",
@@ -48,6 +56,8 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@types/pg": "^8.15.4",
+    "commander": "^12.1.0",
     "compression": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
@@ -56,8 +66,19 @@
     "helmet": "^8.1.0",
     "ioredis": "^5.6.1",
     "morgan": "^1.10.1",
+    "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
     "uuid": "^11.1.0",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "zod": "^4.0.10"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   }
 }

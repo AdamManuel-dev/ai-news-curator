@@ -1,9 +1,9 @@
 import { Injectable } from '@container/Container';
 import { container, REDIS_ADAPTER } from '@container/index';
 import { BaseService } from '@services/index';
-import type { ICacheAdapter } from '@adapters/redis';
+import type { CacheAdapter } from '@adapters/redis';
 
-export interface ICacheService {
+export interface CacheService {
   get<T>(key: string): Promise<T | null>;
   set(key: string, value: unknown, ttlSeconds?: number): Promise<void>;
   delete(key: string): Promise<void>;
@@ -15,15 +15,16 @@ export interface ICacheService {
   setMultiple(items: Array<{ key: string; value: unknown; ttl?: number }>): Promise<void>;
   deleteMultiple(keys: string[]): Promise<void>;
   getMultiple<T>(keys: string[]): Promise<Array<{ key: string; value: T | null }>>;
+  keys(pattern: string): Promise<string[]>;
 }
 
 @Injectable
-export class CacheService extends BaseService implements ICacheService {
-  private cacheAdapter: ICacheAdapter;
+export class CacheService extends BaseService implements CacheService {
+  private cacheAdapter: CacheAdapter;
 
   constructor() {
     super();
-    this.cacheAdapter = container.resolve<ICacheAdapter>(REDIS_ADAPTER);
+    this.cacheAdapter = container.resolve<CacheAdapter>(REDIS_ADAPTER);
   }
 
   async get<T>(key: string): Promise<T | null> {
@@ -173,12 +174,20 @@ export class CacheService extends BaseService implements ICacheService {
     return [prefix, ...parts].filter(Boolean).join(':');
   }
 
+  async keys(pattern: string): Promise<string[]> {
+    try {
+      this.logDebug('Cache KEYS operation', { pattern });
+      const keys = await this.cacheAdapter.keys(pattern);
+      this.logDebug('Cache KEYS result', { pattern, count: keys.length });
+      return keys;
+    } catch (error) {
+      await this.handleError(error as Error, 'Cache KEYS operation failed', { pattern });
+      return [];
+    }
+  }
+
   // Utility method for cache-aside pattern
-  async getOrSet<T>(
-    key: string,
-    fetcher: () => Promise<T>,
-    ttlSeconds?: number
-  ): Promise<T> {
+  async getOrSet<T>(key: string, fetcher: () => Promise<T>, ttlSeconds?: number): Promise<T> {
     try {
       // Try to get from cache first
       const cached = await this.get<T>(key);
@@ -190,11 +199,11 @@ export class CacheService extends BaseService implements ICacheService {
       // Cache miss - fetch data
       this.logDebug('Cache miss - fetching data', { key });
       const data = await fetcher();
-      
+
       // Store in cache for next time
       await this.set(key, data, ttlSeconds);
       this.logDebug('Data cached', { key });
-      
+
       return data;
     } catch (error) {
       await this.handleError(error as Error, 'Cache GET_OR_SET operation failed', { key });
