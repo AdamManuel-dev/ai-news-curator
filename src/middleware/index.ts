@@ -14,3 +14,20 @@ export * from './cache';
 
 // Export comprehensive error handling
 export * from './errors';
+
+// Export metrics middleware
+export { metricsMiddleware, metrics, register as metricsRegistry } from './metrics';
+
+// Export serialization middleware
+export { serializerMiddleware } from '@utils/serializers';
+
+// Export authentication middleware
+export { 
+  authenticateJWT, 
+  optionalAuthenticateJWT, 
+  authenticateAPIKey, 
+  requireRole, 
+  userRateLimit, 
+  devAuthBypass, 
+  requireHTTPS 
+} from './auth';

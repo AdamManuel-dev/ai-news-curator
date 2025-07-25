@@ -27,6 +27,7 @@ module.exports = {
     '^@container/(.*)$': '<rootDir>/src/container/$1',
     '^@adapters/(.*)$': '<rootDir>/src/adapters/$1',
     '^@routes/(.*)$': '<rootDir>/src/routes/$1',
+    '^@database/(.*)$': '<rootDir>/src/database/$1',
   },
   collectCoverageFrom: [
     'src/**/*.ts',

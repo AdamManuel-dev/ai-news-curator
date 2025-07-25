@@ -22,9 +22,12 @@ import cors from 'cors';
 import compression from 'compression';
 import dotenv from 'dotenv';
 import { config } from '@config/index';
-import { errorHandler, notFoundHandler, requestLogger, sanitizeInput } from '@middleware/index';
+import { errorHandler, notFoundHandler, requestLogger, sanitizeInput, metricsMiddleware, serializerMiddleware } from '@middleware/index';
 import logger, { logStream } from '@utils/logger';
 import { healthRouter } from '@routes/health';
+import { metricsRouter } from '@routes/metrics';
+import { authRouter } from '@routes/auth';
+import { apiKeysRouter } from '@routes/api-keys';
 import '@container/setup'; // Initialize dependency injection container
 
 // Load environment variables from .env file
@@ -82,9 +85,20 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Custom middleware
 app.use(requestLogger);
 app.use(sanitizeInput);
+app.use(metricsMiddleware);
+app.use(serializerMiddleware);
 
 // Health check routes
 app.use('/health', healthRouter);
+
+// Metrics endpoint for Prometheus scraping
+app.use('/metrics', metricsRouter);
+
+// Authentication routes
+app.use('/auth', authRouter);
+
+// API key management routes
+app.use('/api-keys', apiKeysRouter);
 
 // API routes will be added here
 app.get('/', (_req, res) => {

@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-news-curator-config
+  namespace: ai-news-curator
+  labels:
+    app: ai-news-curator
+data:
+  # Application Configuration
+  NODE_ENV: "production"
+  PORT: "3000"
+  LOG_LEVEL: "info"
+  
+  # Database Configuration
+  DB_HOST: "postgres-service"
+  DB_PORT: "5432"
+  DB_NAME: "ai_news_curator"
+  DB_USER: "postgres"
+  DB_SSL: "true"
+  DB_POOL_SIZE: "20"
+  DB_CONNECTION_TIMEOUT: "5000"
+  DB_QUERY_TIMEOUT: "30000"
+  DB_RUN_MIGRATIONS: "true"
+  
+  # Redis Configuration
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+  REDIS_DB: "0"
+  
+  # Model Configuration
+  GPT_MODEL: "gpt-4o"
+  GPT_TEMPERATURE: "0.3"
+  GPT_MAX_TOKENS: "2000"
+  OPENAI_EMBEDDING_MODEL: "text-embedding-3-small"
+  
+  # Rate Limiting
+  MAX_REQUESTS_PER_HOUR: "1000"
+  MAX_REQUESTS_PER_DAY: "10000"
+  MAX_ARTICLES_PER_HOUR: "1000"
+  
+  # Content Processing
+  MAX_ARTICLE_LENGTH: "50000"
+  QUALITY_SCORE_THRESHOLD: "0.6"
+  TAG_CONFIDENCE_THRESHOLD: "0.7"
+  SOURCE_REPUTATION_THRESHOLD: "0.5"
+  
+  # Performance
+  MAX_CONCURRENT_REQUESTS: "50"
+  DISCOVERY_TIMEOUT_MS: "30000"
+  TAGGING_TIMEOUT_MS: "2000"
+  RANKING_TIMEOUT_MS: "500"
+  
+  # Cache TTL
+  CONTENT_METADATA_CACHE_TTL: "604800"
+  TAG_ASSIGNMENTS_CACHE_TTL: "2592000"
+  TREND_DATA_CACHE_TTL: "86400"
+  
+  # Security
+  API_KEY_ROTATION_DAYS: "90"
+  
+  # Monitoring
+  HEALTH_CHECK_INTERVAL: "30000"
+  ENABLE_DEBUG_LOGGING: "false"
+  MOCK_EXTERNAL_APIS: "false"

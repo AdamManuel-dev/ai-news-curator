@@ -6,7 +6,11 @@ import { CacheService } from '@services/cache';
 import { CacheManager } from '@services/cache-manager';
 import { redisHealthService } from '@services/redis-health';
 import { DatabaseService } from '@database/service';
+import { DatabaseConnection } from '@database/connection';
 import { HealthController } from '@controllers/health';
+import { pineconeService } from '@services/vectordb';
+import { OAuthService } from '@services/auth/oauth';
+import { ApiKeyService } from '@services/auth/api-key';
 import { container } from './Container';
 import { TOKENS } from './tokens';
 
@@ -36,6 +40,26 @@ export function setupContainer(): void {
   // Register Redis Health Service
   container.registerInstance(TOKENS.REDIS_HEALTH_SERVICE, redisHealthService);
 
+  // Register Vector Database Service
+  container.registerInstance(TOKENS.VECTOR_DB, pineconeService);
+  container.registerInstance(TOKENS.PINECONE_CLIENT, pineconeService);
+
+  // Register Database Connection
+  container.registerFactory(TOKENS.DATABASE, () => {
+    return new DatabaseConnection(config.database);
+  });
+
+  // Register Authentication Services
+  container.registerFactory(TOKENS.OAUTH_SERVICE, () => {
+    const db = container.resolve<DatabaseConnection>(TOKENS.DATABASE);
+    return new OAuthService(db);
+  });
+
+  container.registerFactory(TOKENS.API_KEY_SERVICE, () => {
+    const db = container.resolve<DatabaseConnection>(TOKENS.DATABASE);
+    return new ApiKeyService(db);
+  });
+
   // Register Controllers
   container.registerSingleton(TOKENS.HEALTH_CONTROLLER, HealthController);
 
@@ -48,3 +72,6 @@ export function setupContainer(): void {
 
 // Initialize container setup
 setupContainer();
+
+// Export container for use in tests and other modules
+export { container };

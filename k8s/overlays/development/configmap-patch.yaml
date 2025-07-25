@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-news-curator-config
+data:
+  NODE_ENV: "development"
+  LOG_LEVEL: "debug"
+  ENABLE_DEBUG_LOGGING: "true"
+  DB_SSL: "false"
+  MOCK_EXTERNAL_APIS: "true"

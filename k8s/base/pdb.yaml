@@ -1,0 +1,13 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: ai-news-curator-pdb
+  namespace: ai-news-curator
+  labels:
+    app: ai-news-curator
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: ai-news-curator
+      component: api

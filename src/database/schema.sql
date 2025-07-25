@@ -186,12 +186,26 @@ CREATE TABLE api_keys (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     key_hash VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(100) NOT NULL,
+    description TEXT,
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     permissions TEXT[] DEFAULT '{}',
     rate_limit INTEGER DEFAULT 1000, -- requests per hour
     is_active BOOLEAN DEFAULT TRUE,
     last_used_at TIMESTAMP WITH TIME ZONE,
     expires_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- API key usage logs for rate limiting and analytics
+CREATE TABLE api_key_logs (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    key_id UUID NOT NULL REFERENCES api_keys(id) ON DELETE CASCADE,
+    endpoint VARCHAR(255) NOT NULL,
+    status_code INTEGER NOT NULL,
+    response_time INTEGER, -- milliseconds
+    user_agent TEXT,
+    ip_address INET,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -234,6 +248,15 @@ CREATE INDEX idx_processing_jobs_created_at ON processing_jobs(created_at);
 -- Cache indexes
 CREATE INDEX idx_cache_metadata_expires_at ON cache_metadata(expires_at);
 CREATE INDEX idx_cache_metadata_entity ON cache_metadata(entity_type, entity_id);
+
+-- API key indexes
+CREATE INDEX idx_api_keys_user_id ON api_keys(user_id);
+CREATE INDEX idx_api_keys_is_active ON api_keys(is_active);
+CREATE INDEX idx_api_keys_expires_at ON api_keys(expires_at) WHERE expires_at IS NOT NULL;
+CREATE INDEX idx_api_key_logs_key_id ON api_key_logs(key_id);
+CREATE INDEX idx_api_key_logs_created_at ON api_key_logs(created_at DESC);
+CREATE INDEX idx_api_key_logs_endpoint ON api_key_logs(endpoint);
+CREATE INDEX idx_api_key_logs_rate_limit ON api_key_logs(key_id, created_at) WHERE created_at >= NOW() - INTERVAL '1 hour';
 
 -- Composite indexes for common queries
 CREATE INDEX idx_content_quality_date ON content(quality_score DESC, publish_date DESC);

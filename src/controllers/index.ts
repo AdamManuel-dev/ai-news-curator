@@ -61,3 +61,4 @@ export abstract class BaseController {
 }
 
 export * from './health';
+export * from './enhanced-base';

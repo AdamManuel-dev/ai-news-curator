@@ -1,0 +1,6 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: ai-news-curator-pdb
+spec:
+  minAvailable: 50%

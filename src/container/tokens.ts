@@ -46,6 +46,11 @@ export const TOKENS = {
   CONTENT_CONTROLLER: Symbol('ContentController'),
   HEALTH_CONTROLLER: Symbol('HealthController'),
 
+  // Authentication Services
+  OAUTH_SERVICE: Symbol('OAuthService'),
+  JWT_SERVICE: Symbol('JWTService'),
+  API_KEY_SERVICE: Symbol('APIKeyService'),
+
   // Middleware
   AUTH_MIDDLEWARE: Symbol('AuthMiddleware'),
   RATE_LIMIT_MIDDLEWARE: Symbol('RateLimitMiddleware'),
@@ -80,6 +85,9 @@ export const {
   TAG_REPOSITORY,
   CONTENT_CONTROLLER,
   HEALTH_CONTROLLER,
+  OAUTH_SERVICE,
+  JWT_SERVICE,
+  API_KEY_SERVICE,
   AUTH_MIDDLEWARE,
   RATE_LIMIT_MIDDLEWARE,
 } = TOKENS;

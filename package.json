@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "nodemon",
+    "dev:debug": "nodemon --inspect=0.0.0.0:9229",
     "start": "node dist/index.js",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
@@ -19,7 +20,11 @@
     "migrate:down": "ts-node -r tsconfig-paths/register src/database/migration-cli.ts down",
     "migrate:status": "ts-node -r tsconfig-paths/register src/database/migration-cli.ts status",
     "migrate:validate": "ts-node -r tsconfig-paths/register src/database/migration-cli.ts validate",
-    "migrate:create": "ts-node -r tsconfig-paths/register src/database/migration-cli.ts create"
+    "migrate:create": "ts-node -r tsconfig-paths/register src/database/migration-cli.ts create",
+    "seed": "ts-node -r tsconfig-paths/register src/database/seeds/cli.ts all",
+    "seed:run": "ts-node -r tsconfig-paths/register src/database/seeds/cli.ts run",
+    "seed:clear": "ts-node -r tsconfig-paths/register src/database/seeds/cli.ts clear",
+    "seed:list": "ts-node -r tsconfig-paths/register src/database/seeds/cli.ts list"
   },
   "keywords": [],
   "author": "",
@@ -56,6 +61,8 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@pinecone-database/pinecone": "^6.1.2",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/pg": "^8.15.4",
     "commander": "^12.1.0",
     "compression": "^1.8.1",
@@ -65,8 +72,10 @@
     "express-validator": "^7.2.1",
     "helmet": "^8.1.0",
     "ioredis": "^5.6.1",
+    "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.1",
     "pg": "^8.16.3",
+    "prom-client": "^15.1.3",
     "reflect-metadata": "^0.2.2",
     "uuid": "^11.1.0",
     "winston": "^3.17.0",

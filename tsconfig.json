@@ -24,7 +24,8 @@
       "@types/*": ["src/types/*"],
       "@container/*": ["src/container/*"],
       "@adapters/*": ["src/adapters/*"],
-      "@routes/*": ["src/routes/*"]
+      "@routes/*": ["src/routes/*"],
+      "@database/*": ["src/database/*"]
     },
     "resolveJsonModule": true,
 

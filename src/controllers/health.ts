@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import { Injectable } from '@container/Container';
-import { BaseController } from '@controllers/index';
-import { container, REDIS_ADAPTER, CONFIG, REDIS_HEALTH_SERVICE } from '@container/index';
+import { EnhancedBaseController } from '@controllers/enhanced-base';
+import { container, REDIS_ADAPTER, CONFIG, REDIS_HEALTH_SERVICE, VECTOR_DB } from '@container/index';
 import type { CacheAdapter } from '@adapters/redis';
 import type { RedisHealthService } from '@services/redis-health';
+import type { PineconeService } from '@services/vectordb';
 import type { AppConfig } from '@config/index';
 
 export interface HealthStatus {
@@ -16,6 +17,11 @@ export interface HealthStatus {
     redis: {
       status: 'connected' | 'disconnected' | 'error';
       latency?: number;
+      error?: string;
+    };
+    vectordb: {
+      status: 'connected' | 'disconnected' | 'error';
+      indexName?: string;
       error?: string;
     };
     memory: {
@@ -40,15 +46,17 @@ export interface HealthStatus {
 }
 
 @Injectable
-export class HealthController extends BaseController {
+export class HealthController extends EnhancedBaseController {
   private redisAdapter: CacheAdapter;
   private redisHealthService: RedisHealthService;
+  private vectorDbService: PineconeService;
   private config: AppConfig;
 
   constructor() {
     super();
     this.redisAdapter = container.resolve<CacheAdapter>(REDIS_ADAPTER);
     this.redisHealthService = container.resolve<RedisHealthService>(REDIS_HEALTH_SERVICE);
+    this.vectorDbService = container.resolve<PineconeService>(VECTOR_DB);
     this.config = container.resolve<AppConfig>(CONFIG);
   }
 
@@ -95,6 +103,7 @@ export class HealthController extends BaseController {
     const checks: HealthStatus['checks'] = [];
     const dependencies: HealthStatus['dependencies'] = {
       redis: { status: 'disconnected' },
+      vectordb: { status: 'disconnected' },
       memory: this.getMemoryInfo(),
     };
 
@@ -102,6 +111,11 @@ export class HealthController extends BaseController {
     const redisCheck = await this.checkRedisHealth();
     dependencies.redis = redisCheck.redis;
     checks.push(redisCheck.check);
+
+    // Check Vector Database connection
+    const vectorDbCheck = await this.checkVectorDbHealth();
+    dependencies.vectordb = vectorDbCheck.vectordb;
+    checks.push(vectorDbCheck.check);
 
     // Check memory usage
     const memoryCheck = this.checkMemoryHealth();
@@ -181,6 +195,47 @@ export class HealthController extends BaseController {
           name: 'redis',
           status: 'fail',
           details: `Health check failed: ${errorMessage}`,
+        },
+      };
+    }
+  }
+
+  private async checkVectorDbHealth(): Promise<{
+    vectordb: HealthStatus['dependencies']['vectordb'];
+    check: HealthStatus['checks'][0];
+  }> {
+    try {
+      const startTime = Date.now();
+      const isHealthy = await this.vectorDbService.healthCheck();
+      const responseTime = Date.now() - startTime;
+      
+      const status = isHealthy ? 'connected' : 'error';
+      const checkStatus = isHealthy ? 'pass' : 'fail';
+
+      return {
+        vectordb: {
+          status,
+          indexName: this.vectorDbService.getIndexName(),
+        },
+        check: {
+          name: 'vectordb',
+          status: checkStatus,
+          details: `Vector database (Pinecone) health: ${isHealthy ? 'healthy' : 'unhealthy'}`,
+          responseTime,
+        },
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      return {
+        vectordb: {
+          status: 'error',
+          error: errorMessage,
+          indexName: this.vectorDbService.getIndexName(),
+        },
+        check: {
+          name: 'vectordb',
+          status: 'fail',
+          details: `Vector database health check failed: ${errorMessage}`,
         },
       };
     }

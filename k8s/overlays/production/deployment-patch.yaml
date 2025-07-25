@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-news-curator
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+      - name: ai-news-curator
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          initialDelaySeconds: 30
+          periodSeconds: 15

@@ -1,4 +1,30 @@
-# Multi-stage Dockerfile for production
+# Multi-stage Dockerfile for production and development
+
+# Development stage
+FROM node:20-alpine AS development
+
+WORKDIR /app
+
+# Install development tools
+RUN apk add --no-cache curl
+
+# Copy package files
+COPY package*.json ./
+COPY tsconfig*.json ./
+
+# Install all dependencies including dev dependencies
+RUN npm ci
+
+# Copy source code (will be overridden by volume mount in dev)
+COPY . .
+
+# Expose application port and debugger port
+EXPOSE 3000 9229
+
+# Start in development mode with hot reload and debugging
+CMD ["npm", "run", "dev:debug"]
+
+# Builder stage for production
 FROM node:20-alpine AS builder
 
 # Set working directory

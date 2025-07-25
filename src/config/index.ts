@@ -2,6 +2,7 @@ export interface AppConfig {
   // Server Configuration
   port: number;
   nodeEnv: string;
+  serverUrl: string;
 
   // API Keys
   anthropicApiKey: string;
@@ -65,9 +66,32 @@ export interface AppConfig {
   tagAssignmentsCacheTtl: number;
   trendDataCacheTtl: number;
 
-  // Security
+  // Security & Authentication
   jwtSecret: string;
   apiKeyRotationDays: number;
+  defaultRedirectUri: string;
+
+  // JWT Configuration
+  jwt: {
+    secret: string;
+    refreshSecret: string;
+    accessTokenExpiry: string;
+    refreshTokenExpiry: string;
+    issuer: string;
+    audience: string;
+  };
+
+  // OAuth Configuration
+  oauth: {
+    google: {
+      clientId: string;
+      clientSecret: string;
+    };
+    github: {
+      clientId: string;
+      clientSecret: string;
+    };
+  };
 
   // Monitoring
   logLevel: string;
@@ -82,6 +106,7 @@ export const config: AppConfig = {
   // Server Configuration
   port: parseInt(process.env['PORT'] ?? '3000', 10),
   nodeEnv: process.env['NODE_ENV'] ?? 'development',
+  serverUrl: process.env['SERVER_URL'] ?? 'http://localhost:3000',
 
   // API Keys
   anthropicApiKey: process.env['ANTHROPIC_API_KEY'] ?? '',
@@ -145,9 +170,32 @@ export const config: AppConfig = {
   tagAssignmentsCacheTtl: parseInt(process.env['TAG_ASSIGNMENTS_CACHE_TTL'] ?? '2592000', 10),
   trendDataCacheTtl: parseInt(process.env['TREND_DATA_CACHE_TTL'] ?? '86400', 10),
 
-  // Security
+  // Security & Authentication
   jwtSecret: process.env['JWT_SECRET'] ?? '',
   apiKeyRotationDays: parseInt(process.env['API_KEY_ROTATION_DAYS'] ?? '90', 10),
+  defaultRedirectUri: process.env['DEFAULT_REDIRECT_URI'] ?? 'http://localhost:3000/dashboard',
+
+  // JWT Configuration
+  jwt: {
+    secret: process.env['JWT_SECRET'] ?? 'your-super-secret-jwt-key-change-in-production',
+    refreshSecret: process.env['JWT_REFRESH_SECRET'] ?? 'your-super-secret-refresh-key-change-in-production',
+    accessTokenExpiry: process.env['JWT_ACCESS_TOKEN_EXPIRY'] ?? '1h',
+    refreshTokenExpiry: process.env['JWT_REFRESH_TOKEN_EXPIRY'] ?? '7d',
+    issuer: process.env['JWT_ISSUER'] ?? 'ai-content-curator',
+    audience: process.env['JWT_AUDIENCE'] ?? 'ai-content-curator-users'
+  },
+
+  // OAuth Configuration
+  oauth: {
+    google: {
+      clientId: process.env['GOOGLE_CLIENT_ID'] ?? '',
+      clientSecret: process.env['GOOGLE_CLIENT_SECRET'] ?? ''
+    },
+    github: {
+      clientId: process.env['GITHUB_CLIENT_ID'] ?? '',
+      clientSecret: process.env['GITHUB_CLIENT_SECRET'] ?? ''
+    }
+  },
 
   // Monitoring
   logLevel: process.env['LOG_LEVEL'] ?? 'info',

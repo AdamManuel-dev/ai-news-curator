@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ai-news-curator-prod
+
+bases:
+  - ../../base
+
+patchesStrategicMerge:
+  - deployment-patch.yaml
+  - hpa-patch.yaml
+  - pdb-patch.yaml
+
+configMapGenerator:
+  - name: ai-news-curator-config
+    behavior: merge
+    literals:
+      - NODE_ENV=production
+      - LOG_LEVEL=warn
+
+secretGenerator:
+  - name: ai-news-curator-secrets
+    behavior: replace
+    envs:
+      - secrets.env
+
+images:
+  - name: ai-news-curator
+    newName: your-registry.io/ai-news-curator
+    newTag: v1.0.0
+
+commonAnnotations:
+  environment: production
