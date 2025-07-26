@@ -96,6 +96,105 @@ This file archives completed TODO items with implementation details for future r
   - Automatic cleanup of expired keys and old logs
 - **Notes**: Production-ready API key system supporting service-to-service authentication with comprehensive security and monitoring features. Enables external integrations and API access control.
 
+#### ✅ Implement rate limiting middleware
+- **Completed**: 2025-01-26
+- **Priority**: P0 (Critical)
+- **Size**: L (5-7 days)
+- **Implementation**: Comprehensive rate limiting system with Redis-backed storage and flexible configuration
+- **Files Changed**:
+  - `src/middleware/rate-limit.ts` - Main rate limiting middleware with tier-based limits and dynamic configuration
+  - `src/middleware/rate-limit-redis-store.ts` - Custom Redis store implementation for distributed rate limiting
+  - `src/middleware/metrics.ts` - Added rate limiting metrics for monitoring
+  - `src/routes/rate-limit.ts` - Rate limit info API endpoint
+  - `src/middleware/index.ts` - Export rate limiting middleware
+  - `src/routes/index.ts` - Export rate limit routes
+  - `src/index.ts` - Apply rate limiting to application
+  - `package.json` - Added express-rate-limit dependency
+- **Tests Added**:
+  - `src/middleware/__tests__/rate-limit.test.ts` - Comprehensive rate limiting tests
+- **Dependencies Installed**: `express-rate-limit`, `@types/express-rate-limit`
+- **Features Implemented**:
+  - **Tier-Based Limiting**: Different limits for anonymous, authenticated, premium, API key, and admin users
+  - **Redis-Backed Storage**: Distributed rate limiting across multiple server instances
+  - **Dynamic Configuration**: Adjusts limits based on user authentication status and API key permissions
+  - **Multiple Rate Limiters**: Global, strict, auth, API, content, search, and expensive operation limits
+  - **Skip Logic**: Bypasses rate limiting for health checks, metrics, and development endpoints
+  - **Integration with Auth**: Leverages OAuth and API key systems for user identification
+  - **Comprehensive Monitoring**: Prometheus metrics for rate limit events and checks
+  - **Rate Limit Info API**: Real-time endpoint to check current limits and remaining quotas
+  - **Error Handling**: Graceful fallbacks and comprehensive error logging
+- **Rate Limit Configurations**:
+  - Anonymous: 100 requests per 15 minutes
+  - Authenticated: 1000 requests per 15 minutes  
+  - Premium: 5000 requests per 15 minutes
+  - API Key: 10000 requests per hour (configurable per key)
+  - Admin: 50000 requests per 15 minutes
+- **Security Features**:
+  - IP-based limiting for anonymous users
+  - User-ID based limiting for authenticated users
+  - API key specific limits with usage tracking
+  - Rate limit exceeded logging and monitoring
+  - CSRF protection via proper key generation
+- **Performance Optimizations**:
+  - Redis pipeline operations for atomicity
+  - Efficient key expiration handling
+  - Optimized for high-throughput scenarios
+  - Memory-efficient sliding window implementation
+- **Notes**: Production-ready distributed rate limiting system protecting API endpoints from abuse while providing flexibility for different user tiers. Integrates seamlessly with authentication and monitoring systems.
+
+#### ✅ Create role-based access control
+- **Completed**: 2025-01-26
+- **Priority**: P0 (Critical)
+- **Size**: L (5-7 days)
+- **Implementation**: Complete role-based access control system with comprehensive permission management and route protection
+- **Files Changed**:
+  - `src/services/auth/rbac.ts` - Core RBAC service with role and permission management
+  - `src/middleware/rbac.ts` - RBAC middleware for route protection and permission checking
+  - `src/routes/roles.ts` - REST API endpoints for role and permission management
+  - `src/container/tokens.ts` - Added RBAC service token
+  - `src/container/setup.ts` - Dependency injection setup for RBAC service
+  - `src/middleware/index.ts` - Export RBAC middleware functions
+  - `src/routes/index.ts` - Export roles router
+  - `src/index.ts` - Mount roles routes
+  - `src/database/schema.sql` - Added system roles, permissions, and role-permission assignments
+- **Tests Added**:
+  - `src/services/auth/__tests__/rbac.test.ts` - Comprehensive RBAC service tests
+  - `src/middleware/__tests__/rbac.test.ts` - RBAC middleware tests
+- **Features Implemented**:
+  - **Role Management**: Complete role-based access control with hierarchical permissions
+  - **Permission System**: Granular permissions across 7 resource types (content, users, sources, tags, api_keys, system, analytics)
+  - **Database Schema**: 5 system roles (admin, moderator, premium, user, readonly) with 29 predefined permissions
+  - **RBAC Service**: Full service class for managing roles, permissions, and user assignments
+  - **Middleware Suite**: Flexible middleware for permission/role checking (requirePermission, requireRole, requireAnyPermission, requireAllPermissions)
+  - **API Endpoints**: Complete REST API for role management, permission granting/revoking, and access checking
+  - **User Permission Loading**: Middleware to preload user permissions for efficient access control
+  - **Expiration Support**: Optional expiration dates for role and permission assignments
+  - **Cleanup Operations**: Automated cleanup of expired role and permission assignments
+- **Security Features**:
+  - System-defined roles and permissions cannot be deleted
+  - Transaction-based operations for data consistency
+  - Comprehensive audit logging for all RBAC operations
+  - User-scoped access control preventing unauthorized role management
+  - Protection against privilege escalation
+- **Permission Matrix**:
+  - **Admin**: All permissions (full system access)
+  - **Moderator**: Content management, analytics viewing, system monitoring
+  - **Premium**: Enhanced content access, API key management, analytics viewing
+  - **User**: Basic content access and creation
+  - **Readonly**: View-only access to content and sources
+- **API Endpoints**:
+  - `GET /roles/me` - Get current user's permissions and roles
+  - `GET /roles` - List all roles (admin only)
+  - `GET /roles/permissions` - List all permissions (admin only)
+  - `POST /roles/assign` - Assign role to user (admin only)
+  - `POST /roles/revoke` - Revoke role from user (admin only)
+  - `POST /roles/grant-permission` - Grant direct permission (admin only)
+  - `POST /roles/revoke-permission` - Revoke direct permission (admin only)
+  - `GET /roles/check/:userId/permission/:permission` - Check user permission
+  - `GET /roles/check/:userId/role/:roleName` - Check user role
+  - `POST /roles/cleanup` - Cleanup expired assignments (admin only)
+- **Notes**: Production-ready RBAC system providing comprehensive access control across the entire application. Enables fine-grained permission management with role hierarchy, temporary assignments, and automated cleanup. Integrates seamlessly with authentication system and provides middleware for protecting any API endpoint.
+
 ---
 
 ### Project Setup & Infrastructure (Phase 1)
@@ -364,8 +463,8 @@ This file archives completed TODO items with implementation details for future r
 ---
 
 ## Implementation Statistics
-- **Total Completed**: 44 items (from TODO.md analysis)
-- **P0 Tasks Completed**: 31
+- **Total Completed**: 45 items (from TODO.md analysis)
+- **P0 Tasks Completed**: 32
 - **P1 Tasks Completed**: 13
 - **P2 Tasks Completed**: 0
 - **P3 Tasks Completed**: 0

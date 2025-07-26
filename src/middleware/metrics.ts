@@ -143,6 +143,23 @@ const cacheOperationsCounter = new promClient.Counter({
 });
 
 /**
+ * Rate limiting metrics
+ */
+const rateLimitExceeded = new promClient.Counter({
+  name: 'ai_curator_rate_limit_exceeded_total',
+  help: 'Total number of rate limit exceeded responses',
+  labelNames: ['endpoint', 'method'],
+  registers: [register]
+});
+
+const rateLimitChecks = new promClient.Counter({
+  name: 'ai_curator_rate_limit_checks_total',
+  help: 'Total number of rate limit checks performed',
+  labelNames: ['tier', 'result'],
+  registers: [register]
+});
+
+/**
  * API usage metrics
  */
 const apiCallsCounter = new promClient.Counter({
@@ -267,6 +284,10 @@ export const metrics = {
   cacheOperationsCounter,
   apiCallsCounter,
   apiResponseTime,
+  
+  // Rate limiting metrics
+  rateLimitExceeded,
+  rateLimitChecks,
   
   // Health metrics
   systemHealthGauge,

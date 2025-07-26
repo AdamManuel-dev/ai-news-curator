@@ -22,12 +22,14 @@ import cors from 'cors';
 import compression from 'compression';
 import dotenv from 'dotenv';
 import { config } from '@config/index';
-import { errorHandler, notFoundHandler, requestLogger, sanitizeInput, metricsMiddleware, serializerMiddleware } from '@middleware/index';
+import { errorHandler, notFoundHandler, requestLogger, sanitizeInput, metricsMiddleware, serializerMiddleware, rateLimitMiddleware, authRateLimit } from '@middleware/index';
 import logger, { logStream } from '@utils/logger';
 import { healthRouter } from '@routes/health';
 import { metricsRouter } from '@routes/metrics';
 import { authRouter } from '@routes/auth';
 import { apiKeysRouter } from '@routes/api-keys';
+import { rolesRouter } from '@routes/index';
+import { rateLimitRouter } from '@routes/rate-limit';
 import '@container/setup'; // Initialize dependency injection container
 
 // Load environment variables from .env file
@@ -85,20 +87,31 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Custom middleware
 app.use(requestLogger);
 app.use(sanitizeInput);
+
+// Apply global rate limiting
+app.use(rateLimitMiddleware());
+
+// Metrics middleware (after rate limiting to track limited requests)
 app.use(metricsMiddleware);
 app.use(serializerMiddleware);
 
-// Health check routes
+// Health check routes (no rate limiting)
 app.use('/health', healthRouter);
 
-// Metrics endpoint for Prometheus scraping
+// Metrics endpoint for Prometheus scraping (no rate limiting)
 app.use('/metrics', metricsRouter);
 
-// Authentication routes
-app.use('/auth', authRouter);
+// Rate limit info endpoint
+app.use('/rate-limit', rateLimitRouter);
+
+// Authentication routes with strict rate limiting
+app.use('/auth', authRateLimit, authRouter);
 
 // API key management routes
 app.use('/api-keys', apiKeysRouter);
+
+// Role management routes
+app.use('/roles', rolesRouter);
 
 // API routes will be added here
 app.get('/', (_req, res) => {

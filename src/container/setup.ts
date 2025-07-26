@@ -11,6 +11,10 @@ import { HealthController } from '@controllers/health';
 import { pineconeService } from '@services/vectordb';
 import { OAuthService } from '@services/auth/oauth';
 import { ApiKeyService } from '@services/auth/api-key';
+import { RBACService } from '@services/auth/rbac';
+import { BaseScraper } from '../tools/web-scraper/base-scraper';
+import { RobotsChecker } from '../tools/web-scraper/robots-checker';
+import { RequestThrottle } from '../tools/web-scraper/request-throttle';
 import { container } from './Container';
 import { TOKENS } from './tokens';
 
@@ -58,6 +62,30 @@ export function setupContainer(): void {
   container.registerFactory(TOKENS.API_KEY_SERVICE, () => {
     const db = container.resolve<DatabaseConnection>(TOKENS.DATABASE);
     return new ApiKeyService(db);
+  });
+
+  container.registerFactory(TOKENS.RBAC_SERVICE, () => {
+    const db = container.resolve<DatabaseConnection>(TOKENS.DATABASE);
+    const logger = container.resolve<typeof logger>(TOKENS.LOGGER);
+    return new RBACService(db, logger);
+  });
+
+  // Register Web Scraper Tools
+  container.registerFactory(TOKENS.ROBOTS_CHECKER, () => {
+    const logger = container.resolve<typeof logger>(TOKENS.LOGGER);
+    return new RobotsChecker(logger);
+  });
+
+  container.registerFactory(TOKENS.REQUEST_THROTTLE, () => {
+    const logger = container.resolve<typeof logger>(TOKENS.LOGGER);
+    return new RequestThrottle(logger);
+  });
+
+  container.registerFactory(TOKENS.BASE_SCRAPER, () => {
+    const logger = container.resolve<typeof logger>(TOKENS.LOGGER);
+    const robotsChecker = container.resolve<RobotsChecker>(TOKENS.ROBOTS_CHECKER);
+    const requestThrottle = container.resolve<RequestThrottle>(TOKENS.REQUEST_THROTTLE);
+    return new BaseScraper(logger, robotsChecker, requestThrottle);
   });
 
   // Register Controllers

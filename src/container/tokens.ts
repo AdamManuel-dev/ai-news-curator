@@ -18,6 +18,9 @@ export const TOKENS = {
 
   // Tools
   WEB_SCRAPER: Symbol('WebScraper'),
+  BASE_SCRAPER: Symbol('BaseScraper'),
+  ROBOTS_CHECKER: Symbol('RobotsChecker'),
+  REQUEST_THROTTLE: Symbol('RequestThrottle'),
   RSS_FEED_READER: Symbol('RSSFeedReader'),
   ACADEMIC_SEARCH: Symbol('AcademicSearch'),
   SOCIAL_MEDIA_MONITOR: Symbol('SocialMediaMonitor'),
@@ -50,6 +53,7 @@ export const TOKENS = {
   OAUTH_SERVICE: Symbol('OAuthService'),
   JWT_SERVICE: Symbol('JWTService'),
   API_KEY_SERVICE: Symbol('APIKeyService'),
+  RBAC_SERVICE: Symbol('RBACService'),
 
   // Middleware
   AUTH_MIDDLEWARE: Symbol('AuthMiddleware'),
@@ -66,6 +70,9 @@ export const {
   REDIS_ADAPTER,
   VECTOR_DB,
   WEB_SCRAPER,
+  BASE_SCRAPER,
+  ROBOTS_CHECKER,
+  REQUEST_THROTTLE,
   RSS_FEED_READER,
   ACADEMIC_SEARCH,
   SOCIAL_MEDIA_MONITOR,
@@ -88,6 +95,7 @@ export const {
   OAUTH_SERVICE,
   JWT_SERVICE,
   API_KEY_SERVICE,
+  RBAC_SERVICE,
   AUTH_MIDDLEWARE,
   RATE_LIMIT_MIDDLEWARE,
 } = TOKENS;

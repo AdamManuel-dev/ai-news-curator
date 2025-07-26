@@ -1,143 +1,60 @@
-# Tasks Requiring Clarification
+# TODOs Needing Clarification
 
-Generated: 2025-01-26
+This file tracks TODO items that are too vague or lack sufficient detail for implementation.
 
-## Ambiguous or Unclear TODOs
+## Items Requiring Clarification
 
-### 1. Content Source Requirements
-**TODO**: "Implement site-specific parsers (100+ sources)"
-**Questions**:
-- Which 100+ sources specifically?
-- Priority order for implementation?
-- Are there existing APIs we should use instead of scraping?
-- Legal/robots.txt compliance for each source?
+### High Priority Clarifications
 
-### 2. Ranking Algorithm Specifics
-**TODO**: "Create multi-factor scoring system"
-**Questions**:
-- What specific factors should be included?
-- How should weights be distributed?
-- Should this be ML-based or rule-based initially?
-- Performance requirements (ranking speed)?
+#### 1. ML-based Tagging Engine Implementation
+- **Original TODO**: "Implement ML-based tagging engine"
+- **Missing Details**: 
+  - Which ML model/approach to use (GPT-4, custom model, pre-trained classifier)
+  - Training data requirements and sources
+  - Performance benchmarks and accuracy targets
+- **Priority**: P0 - Critical for core functionality
+- **Status**: Awaiting product/technical specification
 
-### 3. Vector Database Configuration
-**TODO**: "Create Pinecone index configuration"
-**Questions**:
-- Expected scale (millions of embeddings)?
-- Dimension size for embeddings?
-- Metadata fields to include?
-- Backup strategy for vector data?
+#### 2. Multi-factor Scoring System  
+- **Original TODO**: "Create multi-factor scoring system"
+- **Missing Details**:
+  - Specific factors to include (recency, source reputation, engagement)
+  - Weighting algorithm for different factors
+  - Scoring scale and normalization approach
+- **Priority**: P0 - Required for ranking algorithm
+- **Status**: Awaiting product requirements
 
-### 4. Authentication Scope
-**TODO**: "Implement OAuth 2.0 authentication"
-**Questions**:
-- Which OAuth providers (Google, GitHub, etc.)?
-- Support for enterprise SSO?
-- User roles and permissions structure?
-- Session management requirements?
+#### 3. Security Audit Scope
+- **Original TODO**: "Conduct security audit"
+- **Missing Details**:
+  - Audit methodology and tools to use
+  - Compliance requirements (SOC 2, GDPR, etc.)
+  - Remediation timeline and priorities
+- **Priority**: P0 - Launch requirement
+- **Status**: Awaiting security standards
 
-### 5. Rate Limiting Rules
-**TODO**: "Implement rate limiting middleware"
-**Questions**:
-- Specific limits per tier/user type?
-- Should limits be configurable at runtime?
-- Burst allowances?
-- Rate limit headers format?
+### Medium Priority Clarifications
 
-### 6. Monitoring Metrics
-**TODO**: "Create custom metrics for business KPIs"
-**Questions**:
-- Which specific KPIs to track?
-- Real-time vs batch metrics?
-- Data retention period?
-- Alerting thresholds?
+#### 4. Performance Optimization Scope
+- **Original TODO**: "Performance optimization based on metrics"
+- **Missing Details**:
+  - Specific performance targets (response time, throughput)
+  - Areas to focus optimization efforts
+- **Priority**: P0 - Pre-launch requirement
+- **Status**: Awaiting performance requirements
 
-## Vague Implementation Details
+#### 5. Trend Detection Algorithm
+- **Original TODO**: "Build trend detection engine"
+- **Missing Details**:
+  - Algorithm approach (statistical, ML-based, rule-based)
+  - Time windows for trend analysis
+  - Trend significance thresholds
+- **Priority**: P1 - Enhancement feature
+- **Status**: Awaiting algorithm specification
 
-### 1. "Optimize this"
-Found in several places without specifics:
-- Tag taxonomy optimization
-- Performance tuning playbook
-- Index optimization strategy
+## Clarification Process
 
-**Needs**: Specific performance targets and bottlenecks to address
-
-### 2. "Implement fallback mechanisms"
-**Context**: For failed scrapes, API outages, etc.
-**Needs**: Specific fallback strategies and retry policies
-
-### 3. "Create comprehensive tests"
-**Context**: Unit test coverage goals
-**Needs**: Specific coverage targets, critical paths to test
-
-## Technical Decisions Needed
-
-### 1. Caching Strategy
-- Cache TTLs for different data types
-- Cache invalidation rules
-- Memory vs disk caching decisions
-
-### 2. API Versioning Approach
-- URL path versioning vs header versioning
-- Deprecation timeline
-- Backward compatibility requirements
-
-### 3. Deployment Strategy
-- Blue-green vs canary deployments
-- Rollback procedures
-- Database migration strategy in production
-
-## Business Logic Clarifications
-
-### 1. Content Quality Scoring
-- What constitutes "quality" content?
-- How to handle different content types?
-- Language requirements?
-
-### 2. Tag Taxonomy
-- Hierarchical vs flat structure?
-- Maximum tags per article?
-- Tag evolution/deprecation process?
-
-### 3. User Preferences
-- What preferences to track?
-- Privacy considerations?
-- Default preferences for new users?
-
-## External Dependencies
-
-### 1. API Keys and Services
-- Which services require paid plans?
-- Rate limits for external APIs?
-- Fallback if services are unavailable?
-
-### 2. Infrastructure Requirements
-- Minimum cluster size for Kubernetes?
-- Database size projections?
-- Bandwidth requirements for scraping?
-
-## Action Items
-
-1. **Schedule stakeholder meeting** to clarify business requirements
-2. **Create technical design documents** for ambiguous components
-3. **Define acceptance criteria** for each major feature
-4. **Establish performance benchmarks** for critical operations
-5. **Document API rate limits** for all external services
-
-## Priority Clarifications Needed
-
-**High Priority** (Blocking development):
-1. OAuth provider selection
-2. Initial content sources list (top 20)
-3. Basic ranking factors
-4. Rate limiting rules
-
-**Medium Priority** (Can start with assumptions):
-1. Caching TTLs
-2. Monitoring metrics
-3. Tag taxonomy structure
-
-**Low Priority** (Can defer):
-1. Performance optimization targets
-2. Advanced ML features
-3. Personalization rules
+1. **Research Phase**: Review similar implementations and technical feasibility
+2. **Stakeholder Consultation**: Gather requirements from product, engineering, and operations teams
+3. **Decision Documentation**: Record chosen approach with rationale
+4. **Implementation Planning**: Break down into concrete, actionable tasks

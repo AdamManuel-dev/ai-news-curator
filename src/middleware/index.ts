@@ -31,3 +31,28 @@ export {
   devAuthBypass, 
   requireHTTPS 
 } from './auth';
+
+// Export rate limiting middleware
+export {
+  globalRateLimit,
+  strictRateLimit,
+  authRateLimit,
+  apiRateLimit,
+  dynamicRateLimit,
+  contentRateLimit,
+  searchRateLimit,
+  expensiveOperationRateLimit,
+  rateLimitMiddleware
+} from './rate-limit';
+
+// Export RBAC middleware
+export {
+  requirePermission,
+  requireRole,
+  requireAnyPermission,
+  requireAllPermissions,
+  loadUserPermissions,
+  requireAdmin,
+  requireModerator,
+  resourcePermissions
+} from './rbac';
