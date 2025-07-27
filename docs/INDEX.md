@@ -73,7 +73,7 @@ Welcome to the AI Content Curator Agent documentation. This index provides a com
 ### Development Guides
 - [Development Setup](./guides/DEVELOPMENT.md#getting-started) - Environment setup and tools
 - [Testing Strategy](./guides/TESTING.md) - Comprehensive testing approach
-- [Deployment Guide](./guides/DEPLOYMENT.md) - Production deployment (planned)
+- [Deployment Guide](./guides/DEPLOYMENT.md) - Production deployment and DevOps
 - [Contributing Guide](./guides/CONTRIBUTING.md) - Contribution guidelines (planned)
 
 ### Best Practices
@@ -99,23 +99,23 @@ Welcome to the AI Content Curator Agent documentation. This index provides a com
 ## 🚀 Deployment & Operations
 
 ### Deployment
-- [Deployment Guide](./guides/DEPLOYMENT.md) - Production deployment (planned)
+- [Deployment Guide](./guides/DEPLOYMENT.md) - Comprehensive deployment documentation
 - [Docker Configuration](../Dockerfile) - Containerization setup
 - [Environment Variables](../README.md#environment-variables) - Configuration management
 - [Health Monitoring](./modules/health.md) - Operational monitoring
 
 ### Operations
 - **Logging**: Structured logging with Winston
-- **Monitoring**: Health checks and metrics (Prometheus planned)
-- **Alerting**: Error and performance alerts (planned)
-- **Scaling**: Horizontal scaling strategies (planned)
+- **Monitoring**: Health checks and metrics with Prometheus/Grafana
+- **Alerting**: Error and performance alerts
+- **Scaling**: Horizontal scaling with Kubernetes HPA
 
 ## 🔍 Troubleshooting
 
 ### Common Issues
 - [Development Issues](./guides/DEVELOPMENT.md#troubleshooting) - Local development problems
 - [Testing Issues](./guides/TESTING.md#troubleshooting) - Test-related problems
-- [Deployment Issues](./guides/DEPLOYMENT.md#troubleshooting) - Production deployment problems (planned)
+- [Deployment Issues](./guides/DEPLOYMENT.md#troubleshooting) - Production deployment problems
 
 ### Debugging
 - **Logging**: Structured logging for debugging
