@@ -1,0 +1,27 @@
+apiVersion: v2
+name: ai-news-curator
+description: A Helm chart for AI News Curator API service
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+home: https://github.com/your-org/ai-news-curator
+maintainers:
+  - name: AI News Curator Team
+    email: team@example.com
+keywords:
+  - ai
+  - news
+  - content
+  - api
+  - microservice
+dependencies:
+  - name: postgresql
+    version: "13.4.0"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: postgresql.enabled
+  - name: redis
+    version: "18.6.1"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: redis.enabled
+annotations:
+  category: Application

@@ -1,0 +1,124 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ai-news-curator.fullname" . }}
+  namespace: {{ include "ai-news-curator.namespace" . }}
+  labels:
+    {{- include "ai-news-curator.labels" . | nindent 4 }}
+spec:
+  {{- $environment := .Values.environment | default "production" }}
+  {{- $envConfig := index .Values.environments $environment }}
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount | default ($envConfig.replicaCount | default 3) }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "ai-news-curator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "ai-news-curator.podLabels" . | nindent 8 }}
+    spec:
+      {{- include "ai-news-curator.imagePullSecrets" . | nindent 6 }}
+      serviceAccountName: {{ include "ai-news-curator.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ include "ai-news-curator.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.config.port }}
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: {{ include "ai-news-curator.fullname" . }}-config
+            {{- if .Values.secrets.create }}
+            - secretRef:
+                name: {{ include "ai-news-curator.fullname" . }}-secrets
+            {{- end }}
+          env:
+            # Database connection
+            - name: DB_HOST
+              value: {{ include "ai-news-curator.databaseHost" . | quote }}
+            - name: DB_PORT
+              value: {{ .Values.externalDatabase.port | default .Values.config.db.port | quote }}
+            - name: DB_NAME
+              value: {{ .Values.externalDatabase.database | default .Values.config.db.name | quote }}
+            - name: DB_USER
+              value: {{ .Values.externalDatabase.username | default .Values.config.db.user | quote }}
+            {{- if .Values.externalDatabase.enabled }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.externalDatabase.existingSecret }}
+                  key: {{ .Values.externalDatabase.existingSecretPasswordKey }}
+            {{- else if .Values.postgresql.enabled }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgresql
+                  key: postgres-password
+            {{- end }}
+            # Redis connection
+            - name: REDIS_HOST
+              value: {{ include "ai-news-curator.redisHost" . | quote }}
+            - name: REDIS_PORT
+              value: {{ .Values.externalRedis.port | default .Values.config.redis.port | quote }}
+            - name: REDIS_DB
+              value: {{ .Values.externalRedis.database | default .Values.config.redis.db | quote }}
+            {{- if .Values.externalRedis.enabled }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.externalRedis.existingSecret }}
+                  key: {{ .Values.externalRedis.existingSecretPasswordKey }}
+            {{- end }}
+          {{- $mergedResources := .Values.resources }}
+          {{- if $envConfig.resources }}
+          {{- $mergedResources = mustMergeOverwrite $mergedResources $envConfig.resources }}
+          {{- end }}
+          resources:
+            {{- toYaml $mergedResources | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          startupProbe:
+            {{- toYaml .Values.startupProbe | nindent 12 }}
+          volumeMounts:
+            - name: logs
+              mountPath: /app/logs
+            {{- if .Values.persistence.logs.enabled }}
+            - name: persistent-logs
+              mountPath: /app/logs/persistent
+            {{- end }}
+      volumes:
+        - name: logs
+          emptyDir: {}
+        {{- if .Values.persistence.logs.enabled }}
+        - name: persistent-logs
+          persistentVolumeClaim:
+            claimName: {{ include "ai-news-curator.fullname" . }}-logs
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

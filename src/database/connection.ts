@@ -12,6 +12,8 @@ import { Pool, PoolClient, QueryResult } from 'pg';
 import { config } from '@config/index';
 import logger from '@utils/logger';
 import { DatabaseConfig } from '@types/database';
+import { EnhancedConnectionPool, getConnectionPool, initializePool } from './connection-pool';
+import { getPoolMonitor, initializePoolMonitoring } from './pool-monitor';
 
 /**
  * Database connection manager with connection pooling
@@ -292,12 +294,33 @@ export function getDatabase(): DatabaseConnection {
 }
 
 /**
- * Initialize database connection
+ * Initialize database connection with enhanced pooling and monitoring
  */
 export async function initializeDatabase(): Promise<DatabaseConnection> {
-  const db = getDatabase();
-  await db.connect();
-  return db;
+  try {
+    // Initialize enhanced connection pool
+    await initializePool();
+    logger.info('Enhanced connection pool initialized');
+
+    // Initialize pool monitoring
+    await initializePoolMonitoring();
+    logger.info('Connection pool monitoring started');
+
+    // Initialize legacy connection for backward compatibility
+    const db = getDatabase();
+    await db.connect();
+    
+    return db;
+  } catch (error) {
+    logger.error('Failed to initialize database with enhanced features', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+    
+    // Fallback to basic connection
+    const db = getDatabase();
+    await db.connect();
+    return db;
+  }
 }
 
 /**

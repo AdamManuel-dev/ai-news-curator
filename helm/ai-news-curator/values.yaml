@@ -1,0 +1,365 @@
+# Default values for ai-news-curator
+# This is a YAML-formatted file.
+# Declare variables to be substituted into your templates.
+
+# Global settings
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: ""
+
+# Application configuration
+image:
+  registry: ""
+  repository: ai-news-curator
+  tag: "latest"
+  pullPolicy: Always
+  pullSecrets: []
+
+# Service configuration
+service:
+  type: ClusterIP
+  ports:
+    http: 80
+  targetPort: 3000
+  annotations: {}
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+
+# Deployment configuration
+replicaCount: 3
+
+# Pod configuration
+podAnnotations: {}
+podLabels: {}
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  fsGroup: 1001
+
+# Container security context
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1001
+  capabilities:
+    drop:
+    - ALL
+
+# Resource management
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+# Autoscaling
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+  
+# Pod Disruption Budget
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+  # maxUnavailable: 1
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/limit-rps: "10"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: api.ainewscurator.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ai-news-curator-tls
+      hosts:
+        - api.ainewscurator.example.com
+
+# Networking
+networkPolicy:
+  enabled: true
+  ingress:
+    - from: []
+      ports:
+        - port: 3000
+          protocol: TCP
+  egress:
+    - to: []
+      ports:
+        - port: 5432
+          protocol: TCP
+        - port: 6379
+          protocol: TCP
+        - port: 53
+          protocol: UDP
+        - port: 443
+          protocol: TCP
+        - port: 80
+          protocol: TCP
+
+# Probes configuration
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 15
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+startupProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 30
+
+# Application configuration (environment variables)
+config:
+  # Application
+  nodeEnv: "production"
+  port: 3000
+  logLevel: "info"
+  
+  # Database
+  db:
+    host: "{{ .Release.Name }}-postgresql"
+    port: 5432
+    name: "ai_news_curator"
+    user: "postgres"
+    ssl: true
+    poolSize: 20
+    connectionTimeout: 5000
+    queryTimeout: 30000
+    runMigrations: true
+  
+  # Redis
+  redis:
+    host: "{{ .Release.Name }}-redis-master"
+    port: 6379
+    db: 0
+  
+  # AI/ML Models
+  models:
+    gpt:
+      model: "gpt-4o"
+      temperature: 0.3
+      maxTokens: 2000
+    openai:
+      embeddingModel: "text-embedding-3-small"
+  
+  # Rate Limiting
+  rateLimiting:
+    maxRequestsPerHour: 1000
+    maxRequestsPerDay: 10000
+    maxArticlesPerHour: 1000
+  
+  # Content Processing
+  content:
+    maxArticleLength: 50000
+    qualityScoreThreshold: 0.6
+    tagConfidenceThreshold: 0.7
+    sourceReputationThreshold: 0.5
+  
+  # Performance
+  performance:
+    maxConcurrentRequests: 50
+    discoveryTimeoutMs: 30000
+    taggingTimeoutMs: 2000
+    rankingTimeoutMs: 500
+  
+  # Cache TTL (seconds)
+  cache:
+    contentMetadataTtl: 604800    # 7 days
+    tagAssignmentsTtl: 2592000    # 30 days
+    trendDataTtl: 86400           # 1 day
+  
+  # Security
+  security:
+    apiKeyRotationDays: 90
+  
+  # Monitoring
+  monitoring:
+    healthCheckInterval: 30000
+    enableDebugLogging: false
+    mockExternalApis: false
+
+# Secret configuration (external secrets are recommended)
+secrets:
+  create: true
+  annotations: {}
+  data: {}
+    # Database password, API keys, etc.
+    # It's recommended to use external-secrets operator or similar
+    # DB_PASSWORD: ""
+    # JWT_SECRET: ""
+    # OPENAI_API_KEY: ""
+    # PINECONE_API_KEY: ""
+
+# ServiceAccount
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+  automountServiceAccountToken: false
+
+# Node selection
+nodeSelector: {}
+tolerations: []
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+            - ai-news-curator
+        topologyKey: kubernetes.io/hostname
+
+# Volumes
+persistence:
+  logs:
+    enabled: false
+    storageClass: ""
+    size: 1Gi
+    annotations: {}
+
+# PostgreSQL dependency configuration
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: "postgres"
+    database: "ai_news_curator"
+  primary:
+    persistence:
+      enabled: true
+      size: 10Gi
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "250m"
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+  metrics:
+    enabled: true
+
+# Redis dependency configuration
+redis:
+  enabled: true
+  auth:
+    enabled: false
+  master:
+    persistence:
+      enabled: true
+      size: 1Gi
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "200m"
+  metrics:
+    enabled: true
+
+# Monitoring configuration
+monitoring:
+  serviceMonitor:
+    enabled: false
+    interval: 30s
+    path: /metrics
+    labels: {}
+  prometheusRule:
+    enabled: false
+    labels: {}
+    rules: []
+
+# External services (disable internal ones when using external)
+externalDatabase:
+  enabled: false
+  host: ""
+  port: 5432
+  database: ""
+  username: ""
+  existingSecret: ""
+  existingSecretPasswordKey: ""
+
+externalRedis:
+  enabled: false
+  host: ""
+  port: 6379
+  database: 0
+  existingSecret: ""
+  existingSecretPasswordKey: ""
+
+# Environment-specific overrides
+environments:
+  development:
+    replicaCount: 1
+    autoscaling:
+      enabled: false
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "250m"
+    config:
+      logLevel: "debug"
+      monitoring:
+        enableDebugLogging: true
+        mockExternalApis: true
+    
+  staging:
+    replicaCount: 2
+    autoscaling:
+      maxReplicas: 5
+    
+  production:
+    replicaCount: 3
+    autoscaling:
+      maxReplicas: 20
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "500m"
+      limits:
+        memory: "1Gi"
+        cpu: "1000m"

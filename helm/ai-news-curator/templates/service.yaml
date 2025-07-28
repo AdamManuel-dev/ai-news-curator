@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ai-news-curator.fullname" . }}
+  namespace: {{ include "ai-news-curator.namespace" . }}
+  labels:
+    {{- include "ai-news-curator.labels" . | nindent 4 }}
+  {{- $serviceAnnotations := include "ai-news-curator.serviceAnnotations" . }}
+  {{- if $serviceAnnotations }}
+  annotations:
+    {{- $serviceAnnotations | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.ports.http }}
+      targetPort: {{ .Values.service.targetPort | default "http" }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "ai-news-curator.selectorLabels" . | nindent 4 }}
+  {{- if .Values.service.sessionAffinity }}
+  sessionAffinity: {{ .Values.service.sessionAffinity }}
+  {{- if .Values.service.sessionAffinityConfig }}
+  sessionAffinityConfig:
+    {{- toYaml .Values.service.sessionAffinityConfig | nindent 4 }}
+  {{- end }}
+  {{- end }}

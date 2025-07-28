@@ -1,0 +1,83 @@
+# Development environment values
+environment: development
+
+# Reduced resources for development
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "250m"
+
+# Development configuration
+config:
+  logLevel: "debug"
+  monitoring:
+    enableDebugLogging: true
+    mockExternalApis: true
+
+# Disable TLS for development
+ingress:
+  enabled: false
+  # If you want to enable ingress for development:
+  # enabled: true
+  # tls: []
+  # hosts:
+  #   - host: ai-curator.local
+  #     paths:
+  #       - path: /
+  #         pathType: Prefix
+
+# Use smaller databases for development
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: "devpassword"
+  primary:
+    persistence:
+      size: 1Gi
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "200m"
+
+redis:
+  enabled: true
+  master:
+    persistence:
+      size: 100Mi
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "50m"
+      limits:
+        memory: "128Mi"
+        cpu: "100m"
+
+# Development secrets (not for production!)
+secrets:
+  create: true
+  data:
+    OPENAI_API_KEY: "sk-test-key-for-development"
+    PINECONE_API_KEY: "test-pinecone-key"
+    BROWSERBASE_API_KEY: "test-browserbase-key"
+    BROWSERBASE_PROJECT_ID: "test-project-id"
+    OAUTH_GOOGLE_CLIENT_SECRET: "dev-google-secret"
+    OAUTH_GITHUB_CLIENT_SECRET: "dev-github-secret"
+
+# Disable network policies for easier development
+networkPolicy:
+  enabled: false
+
+# Disable pod disruption budget for development
+podDisruptionBudget:
+  enabled: false

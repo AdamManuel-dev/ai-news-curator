@@ -1,0 +1,91 @@
+# Staging environment values
+environment: staging
+
+# Moderate resources for staging
+replicaCount: 2
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+# Staging configuration
+config:
+  logLevel: "info"
+  monitoring:
+    enableDebugLogging: false
+    mockExternalApis: false
+
+# Enable ingress with staging domain
+ingress:
+  enabled: true
+  hosts:
+    - host: api-staging.ainewscurator.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ai-news-curator-staging-tls
+      hosts:
+        - api-staging.ainewscurator.example.com
+
+# Moderate database resources for staging
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: "staging-secure-password"
+  primary:
+    persistence:
+      size: 5Gi
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "200m"
+      limits:
+        memory: "512Mi"
+        cpu: "400m"
+
+redis:
+  enabled: true
+  master:
+    persistence:
+      size: 500Mi
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "200m"
+
+# Staging secrets (should be managed externally)
+secrets:
+  create: false
+  # Use external secret management for staging
+  # annotations:
+  #   external-secrets.io/backend: "vault"
+  #   external-secrets.io/key: "staging/ai-news-curator"
+
+# Enable monitoring for staging
+monitoring:
+  serviceMonitor:
+    enabled: true
+  prometheusRule:
+    enabled: true
+
+# Network policies enabled for security
+networkPolicy:
+  enabled: true
+
+# Pod disruption budget enabled
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1

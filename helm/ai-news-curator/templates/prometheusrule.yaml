@@ -1,0 +1,64 @@
+{{- if .Values.monitoring.prometheusRule.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "ai-news-curator.fullname" . }}
+  namespace: {{ include "ai-news-curator.namespace" . }}
+  labels:
+    {{- include "ai-news-curator.labels" . | nindent 4 }}
+    {{- with .Values.monitoring.prometheusRule.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+  - name: ai-news-curator.rules
+    rules:
+    - alert: AiNewsCuratorDown
+      expr: up{job="ai-news-curator"} == 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "AI News Curator is down"
+        description: "AI News Curator has been down for more than 1 minute"
+    
+    - alert: AiNewsCuratorHighErrorRate
+      expr: rate(http_requests_total{job="ai-news-curator",status=~"5.."}[5m]) > 0.1
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High error rate in AI News Curator"
+        description: "Error rate is {{ "{{ $value }}" }} requests per second"
+    
+    - alert: AiNewsCuratorHighLatency
+      expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="ai-news-curator"}[5m])) > 1
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High latency in AI News Curator"
+        description: "95th percentile latency is {{ "{{ $value }}" }} seconds"
+    
+    - alert: AiNewsCuratorHighMemoryUsage
+      expr: container_memory_usage_bytes{pod=~"ai-news-curator-.*"} / container_spec_memory_limit_bytes > 0.9
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High memory usage in AI News Curator"
+        description: "Memory usage is {{ "{{ $value | humanizePercentage }}" }}"
+    
+    - alert: AiNewsCuratorHighCPUUsage
+      expr: rate(container_cpu_usage_seconds_total{pod=~"ai-news-curator-.*"}[5m]) / container_spec_cpu_quota * container_spec_cpu_period > 0.8
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High CPU usage in AI News Curator"
+        description: "CPU usage is {{ "{{ $value | humanizePercentage }}" }}"
+    
+    {{- range .Values.monitoring.prometheusRule.rules }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+{{- end }}

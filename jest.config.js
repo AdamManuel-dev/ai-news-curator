@@ -1,3 +1,12 @@
+/**
+ * @fileoverview Jest testing configuration for TypeScript Node.js application
+ * 
+ * Features: TypeScript support, path mapping, coverage collection, multiple test locations
+ * Main APIs: N/A (configuration only)
+ * Constraints: Requires ts-jest, tsconfig.test.json, 10s timeout limit
+ * Patterns: @ alias imports, __tests__ and tests/ directories, excludes index.ts from coverage
+ */
+
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',

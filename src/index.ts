@@ -1,17 +1,10 @@
 /**
- * @fileoverview Main Express application entry point for the AI Content Curator Agent.
- *
- * This file sets up the Express server with comprehensive middleware stack including:
- * - Security headers and CORS configuration
- * - Request logging and sanitization
- * - Health monitoring endpoints
- * - Error handling and graceful shutdown
- *
- * The application follows a layered architecture with dependency injection
- * and provides RESTful APIs for content discovery and curation.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * @fileoverview Express application entry point for AI content curator
+ * 
+ * Features: Security headers, CORS, rate limiting, auth, metrics, health checks
+ * Main APIs: startServer(), /health, /auth, /api-keys, /roles, /metrics
+ * Constraints: Requires config vars, Redis for rate limiting, 10mb body limit
+ * Patterns: Graceful shutdown, global error handling, middleware composition
  */
 
 import 'reflect-metadata';
@@ -24,12 +17,14 @@ import dotenv from 'dotenv';
 import { config } from '@config/index';
 import { errorHandler, notFoundHandler, requestLogger, sanitizeInput, metricsMiddleware, serializerMiddleware, rateLimitMiddleware, authRateLimit } from '@middleware/index';
 import logger, { logStream } from '@utils/logger';
+import { createHttpsServer, configureTLSSecurity, validateTLSConfig, getTLSConfigSummary } from '@utils/tls';
 import { healthRouter } from '@routes/health';
 import { metricsRouter } from '@routes/metrics';
 import { authRouter } from '@routes/auth';
 import { apiKeysRouter } from '@routes/api-keys';
-import { rolesRouter } from '@routes/index';
+import { rolesRouter, poolMonitorRouter } from '@routes/index';
 import { rateLimitRouter } from '@routes/rate-limit';
+import { adminRouter } from '@routes/admin';
 import '@container/setup'; // Initialize dependency injection container
 
 // Load environment variables from .env file
@@ -41,6 +36,9 @@ dotenv.config();
  * and error handling.
  */
 const app = express();
+
+// Configure TLS security settings
+configureTLSSecurity(app);
 
 // Security middleware
 app.use(
@@ -113,6 +111,12 @@ app.use('/api-keys', apiKeysRouter);
 // Role management routes
 app.use('/roles', rolesRouter);
 
+// Admin management routes
+app.use('/admin', adminRouter);
+
+// Database pool monitoring routes
+app.use('/pool', poolMonitorRouter);
+
 // API routes will be added here
 app.get('/', (_req, res) => {
   logger.info('Root endpoint accessed');
@@ -130,10 +134,10 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 /**
- * Starts the Express server on the configured port.
+ * Starts the Express server with HTTP and optionally HTTPS.
  *
- * Initializes the HTTP server and logs startup information including
- * port, environment, and log level for debugging purposes.
+ * Initializes HTTP server and HTTPS server (if configured) with comprehensive
+ * logging and error handling for both protocols.
  *
  * @returns {void}
  *
@@ -141,19 +145,97 @@ app.use(errorHandler);
  * ```typescript
  * // Start the server
  * startServer();
- * // Server will be available at http://localhost:3000
+ * // Server will be available at http://localhost:3000 and https://localhost:3443
  * ```
  *
  * @since 1.0.0
  */
 const startServer = (): void => {
-  app.listen(config.port, () => {
-    logger.info('Server started successfully', {
+  // Validate TLS configuration if HTTPS is enabled
+  if (config.https.enabled) {
+    const validation = validateTLSConfig();
+    if (!validation.valid) {
+      logger.error('Invalid TLS configuration', {
+        errors: validation.errors
+      });
+      process.exit(1);
+    }
+    
+    logger.info('TLS configuration validated', getTLSConfigSummary());
+  }
+
+  // Start HTTP server
+  const httpServer = app.listen(config.port, () => {
+    logger.info('HTTP server started successfully', {
       port: config.port,
+      protocol: 'http',
       environment: config.nodeEnv,
       logLevel: config.logLevel,
       timestamp: new Date().toISOString(),
     });
+  });
+
+  // Start HTTPS server if enabled
+  if (config.https.enabled) {
+    const httpsServer = createHttpsServer(app);
+    
+    if (httpsServer) {
+      httpsServer.listen(config.https.port, () => {
+        logger.info('HTTPS server started successfully', {
+          port: config.https.port,
+          protocol: 'https',
+          environment: config.nodeEnv,
+          forceHttps: config.https.forceHttps,
+          trustProxy: config.https.trustProxy,
+          timestamp: new Date().toISOString(),
+        });
+      });
+
+      // Handle HTTPS server errors
+      httpsServer.on('error', (error: any) => {
+        logger.error('HTTPS server error', {
+          error: error.message,
+          code: error.code,
+          port: config.https.port
+        });
+        
+        if (error.code === 'EADDRINUSE') {
+          logger.error(`HTTPS port ${config.https.port} is already in use`);
+          process.exit(1);
+        }
+      });
+
+      // Graceful HTTPS server shutdown
+      process.on('SIGTERM', () => {
+        logger.info('SIGTERM signal received: closing HTTPS server');
+        httpsServer.close(() => {
+          logger.info('HTTPS server closed');
+        });
+      });
+
+      process.on('SIGINT', () => {
+        logger.info('SIGINT signal received: closing HTTPS server');
+        httpsServer.close(() => {
+          logger.info('HTTPS server closed');
+        });
+      });
+    } else {
+      logger.error('Failed to create HTTPS server - falling back to HTTP only');
+    }
+  }
+
+  // Handle HTTP server errors
+  httpServer.on('error', (error: any) => {
+    logger.error('HTTP server error', {
+      error: error.message,
+      code: error.code,
+      port: config.port
+    });
+    
+    if (error.code === 'EADDRINUSE') {
+      logger.error(`HTTP port ${config.port} is already in use`);
+      process.exit(1);
+    }
   });
 };
 

@@ -1,0 +1,150 @@
+# Production environment values
+environment: production
+
+# Production resources
+replicaCount: 3
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 20
+
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "500m"
+  limits:
+    memory: "1Gi"
+    cpu: "1000m"
+
+# Production configuration
+config:
+  logLevel: "info"
+  monitoring:
+    enableDebugLogging: false
+    mockExternalApis: false
+
+# Production ingress configuration
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/rate-limit: "1000"
+    nginx.ingress.kubernetes.io/limit-rps: "50"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://ainewscurator.com"
+  hosts:
+    - host: api.ainewscurator.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ai-news-curator-prod-tls
+      hosts:
+        - api.ainewscurator.com
+
+# Use external managed databases for production
+postgresql:
+  enabled: false
+
+redis:
+  enabled: false
+
+# External database configuration
+externalDatabase:
+  enabled: true
+  host: "prod-postgres.cluster.local"
+  port: 5432
+  database: "ai_news_curator"
+  username: "ai_curator_user"
+  existingSecret: "ai-news-curator-db-secret"
+  existingSecretPasswordKey: "password"
+
+externalRedis:
+  enabled: true
+  host: "prod-redis.cluster.local"
+  port: 6379
+  database: 0
+  existingSecret: "ai-news-curator-redis-secret"
+  existingSecretPasswordKey: "password"
+
+# Production secrets (managed externally)
+secrets:
+  create: false
+  # Use external secret management (e.g., External Secrets Operator)
+  # annotations:
+  #   external-secrets.io/backend: "vault"
+  #   external-secrets.io/key: "production/ai-news-curator"
+
+# Enable full monitoring for production
+monitoring:
+  serviceMonitor:
+    enabled: true
+    interval: 15s
+  prometheusRule:
+    enabled: true
+    rules:
+      # Additional production-specific rules
+      - alert: AiNewsCuratorCriticalErrorRate
+        expr: rate(http_requests_total{job="ai-news-curator",status=~"5.."}[1m]) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical error rate in production"
+          description: "Error rate is {{ $value }} requests per second"
+
+# Production security settings
+networkPolicy:
+  enabled: true
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - port: 3000
+          protocol: TCP
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 2
+
+# Production affinity for better distribution
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+        - key: app.kubernetes.io/name
+          operator: In
+          values:
+          - ai-news-curator
+      topologyKey: kubernetes.io/hostname
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      preference:
+        matchExpressions:
+        - key: node-type
+          operator: In
+          values:
+          - production
+
+# Production persistent logs
+persistence:
+  logs:
+    enabled: true
+    size: 10Gi
+    storageClass: "fast-ssd"
+
+# Production node selector
+nodeSelector:
+  environment: production
+  node-size: large
+
+# Production tolerations
+tolerations:
+  - key: "production-only"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"

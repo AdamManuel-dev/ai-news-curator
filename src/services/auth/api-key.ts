@@ -376,11 +376,95 @@ export class ApiKeyService {
   }
 
   /**
+   * Rotate a specific API key
+   */
+  async rotateApiKey(keyId: string, userId?: string, extendDays = 90): Promise<{ oldKey: ApiKey; newKey: ApiKey; rawKey: string }> {
+    try {
+      // Begin transaction for atomic rotation
+      await this.db.query('BEGIN');
+
+      // Get existing key
+      const existingKeyResult = await this.db.query(`
+        SELECT * FROM api_keys 
+        WHERE id = $1 AND is_active = TRUE
+        ${userId ? 'AND user_id = $2' : ''}
+      `, userId ? [keyId, userId] : [keyId]);
+
+      if (existingKeyResult.rows.length === 0) {
+        throw new Error('API key not found or access denied');
+      }
+
+      const oldKey = this.mapRowToApiKey(existingKeyResult.rows[0]);
+
+      // Create new key with same properties but extended expiration
+      const newExpiresAt = new Date(Date.now() + extendDays * 24 * 60 * 60 * 1000);
+      const newKeyParams: CreateApiKeyParams = {
+        name: `${oldKey.name} (Rotated)`,
+        userId: oldKey.user_id,
+        permissions: oldKey.permissions,
+        rateLimit: oldKey.rate_limit,
+        expiresAt: newExpiresAt,
+        description: `Rotated from key ${keyId} at ${new Date().toISOString()}`
+      };
+
+      // Generate new key
+      const rawKey = this.generateSecureApiKey();
+      const keyHash = this.hashApiKey(rawKey);
+
+      const newKeyResult = await this.db.query(`
+        INSERT INTO api_keys (key_hash, name, user_id, permissions, rate_limit, expires_at, description, created_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
+        RETURNING *
+      `, [
+        keyHash,
+        newKeyParams.name,
+        newKeyParams.userId,
+        JSON.stringify(newKeyParams.permissions),
+        newKeyParams.rateLimit,
+        newKeyParams.expiresAt,
+        newKeyParams.description
+      ]);
+
+      const newKey = this.mapRowToApiKey(newKeyResult.rows[0]);
+
+      // Deactivate old key
+      await this.db.query(`
+        UPDATE api_keys 
+        SET is_active = FALSE, updated_at = NOW() 
+        WHERE id = $1
+      `, [keyId]);
+
+      // Commit transaction
+      await this.db.query('COMMIT');
+
+      logger.info('API key rotated successfully', {
+        oldKeyId: keyId,
+        newKeyId: newKey.id,
+        userId: oldKey.user_id,
+        extendDays
+      });
+
+      return { oldKey, newKey, rawKey };
+    } catch (error) {
+      // Rollback on error
+      await this.db.query('ROLLBACK');
+      
+      logger.error('API key rotation failed', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        keyId,
+        userId
+      });
+      throw error;
+    }
+  }
+
+  /**
    * Rotate API keys approaching expiration
    */
-  async rotateExpiringKeys(daysBeforeExpiry = 7): Promise<{ rotated: number; notified: string[] }> {
-    const rotated = 0;
+  async rotateExpiringKeys(daysBeforeExpiry = 7, autoRotate = false): Promise<{ rotated: number; notified: string[]; rotationResults: Array<{ keyId: string; success: boolean; newKeyId?: string; error?: string }> }> {
+    let rotated = 0;
     const notified: string[] = [];
+    const rotationResults: Array<{ keyId: string; success: boolean; newKeyId?: string; error?: string }> = [];
 
     try {
       // Find keys expiring soon
@@ -395,27 +479,63 @@ export class ApiKeyService {
       `);
 
       for (const row of result.rows) {
-        notified.push(row.email);
-        logger.warn('API key expiring soon', {
-          keyId: row.id,
-          keyName: row.name,
-          userEmail: row.email,
-          expiresAt: row.expires_at
-        });
+        const keyData = row as any; // Database row with mixed column naming
+        notified.push(keyData.email);
+        
+        if (autoRotate) {
+          try {
+            const { newKey } = await this.rotateApiKey(keyData.id, undefined, config.apiKeyRotationDays);
+            rotated++;
+            rotationResults.push({
+              keyId: keyData.id,
+              success: true,
+              newKeyId: newKey.id
+            });
+            
+            logger.info('Auto-rotated expiring API key', {
+              oldKeyId: keyData.id,
+              newKeyId: newKey.id,
+              keyName: keyData.name,
+              userEmail: keyData.email,
+              expiresAt: keyData.expires_at
+            });
+          } catch (error) {
+            rotationResults.push({
+              keyId: keyData.id,
+              success: false,
+              error: error instanceof Error ? error.message : 'Unknown error'
+            });
+            
+            logger.error('Failed to auto-rotate expiring API key', {
+              keyId: keyData.id,
+              keyName: keyData.name,
+              userEmail: keyData.email,
+              error: error instanceof Error ? error.message : 'Unknown error'
+            });
+          }
+        } else {
+          logger.warn('API key expiring soon', {
+            keyId: keyData.id,
+            keyName: keyData.name,
+            userEmail: keyData.email,
+            expiresAt: keyData.expires_at
+          });
+        }
       }
 
       logger.info('API key rotation check completed', {
         keysExpiringSoon: result.rows.length,
         rotated,
-        notified: notified.length
+        notified: notified.length,
+        autoRotate
       });
 
-      return { rotated, notified };
+      return { rotated, notified, rotationResults };
     } catch (error) {
-      logger.error('API key rotation failed', {
+      logger.error('API key rotation check failed', {
         error: error instanceof Error ? error.message : 'Unknown error'
       });
-      return { rotated: 0, notified: [] };
+      return { rotated: 0, notified: [], rotationResults: [] };
     }
   }
 

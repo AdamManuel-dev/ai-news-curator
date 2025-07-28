@@ -459,4 +459,86 @@ router.post('/:keyId/test', async (req: AuthenticatedRequest, res: Response) => 
   }
 });
 
+/**
+ * POST /api-keys/:keyId/rotate
+ * 
+ * Rotate an API key (create new key, deactivate old)
+ * 
+ * @route POST /api-keys/:keyId/rotate
+ * @param {string} keyId - API key ID
+ * @body {object} Rotation parameters
+ * @returns {object} New API key with raw key (only shown once)
+ * @access Private
+ */
+router.post('/:keyId/rotate', validate({
+  body: {
+    type: 'object',
+    properties: {
+      extendDays: {
+        type: 'integer',
+        minimum: 1,
+        maximum: 365,
+        default: 90
+      }
+    },
+    additionalProperties: false
+  }
+}), async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { keyId } = req.params;
+    const userId = req.user!.id;
+    const { extendDays = 90 } = req.body;
+
+    const apiKeyService = container.get<ApiKeyService>(TOKENS.API_KEY_SERVICE);
+    const { oldKey, newKey, rawKey } = await apiKeyService.rotateApiKey(keyId, userId, extendDays);
+
+    logger.info('API key rotated', {
+      oldKeyId: keyId,
+      newKeyId: newKey.id,
+      userId,
+      extendDays
+    });
+
+    res.json({
+      message: 'API key rotated successfully',
+      rotation: {
+        old_key: {
+          id: oldKey.id,
+          name: oldKey.name,
+          revoked_at: new Date().toISOString()
+        },
+        new_key: {
+          id: newKey.id,
+          name: newKey.name,
+          permissions: newKey.permissions,
+          rate_limit: newKey.rate_limit,
+          expires_at: newKey.expires_at,
+          created_at: newKey.created_at,
+          // Raw key only shown once
+          raw_key: rawKey
+        }
+      },
+      security_notice: 'Store the new key securely. It will not be shown again. Update your applications to use the new key.'
+    });
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('not found')) {
+      return res.status(404).json({
+        error: 'API key not found',
+        code: 'API_KEY_NOT_FOUND'
+      });
+    }
+
+    logger.error('Failed to rotate API key', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      keyId: req.params.keyId,
+      userId: req.user?.id
+    });
+
+    res.status(500).json({
+      error: 'Failed to rotate API key',
+      code: 'API_KEY_ROTATE_ERROR'
+    });
+  }
+});
+
 export const apiKeysRouter = router;

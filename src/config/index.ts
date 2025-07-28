@@ -1,3 +1,12 @@
+/**
+ * @fileoverview Application configuration management with environment variable loading
+ * 
+ * Features: Server config, API keys, database, Redis, rate limiting, JWT, OAuth, caching
+ * Main APIs: config object, AppConfig interface
+ * Constraints: Requires 30+ env vars, defaults for development, JWT secrets mandatory in prod
+ * Patterns: Environment-first config, type-safe interface, fallback defaults
+ */
+
 export interface AppConfig {
   // Server Configuration
   port: number;
@@ -70,6 +79,18 @@ export interface AppConfig {
   jwtSecret: string;
   apiKeyRotationDays: number;
   defaultRedirectUri: string;
+
+  // HTTPS/TLS Configuration
+  https: {
+    enabled: boolean;
+    port: number;
+    keyPath?: string;
+    certPath?: string;
+    caPath?: string;
+    passphrase?: string;
+    forceHttps: boolean;
+    trustProxy: boolean;
+  };
 
   // JWT Configuration
   jwt: {
@@ -174,6 +195,18 @@ export const config: AppConfig = {
   jwtSecret: process.env['JWT_SECRET'] ?? '',
   apiKeyRotationDays: parseInt(process.env['API_KEY_ROTATION_DAYS'] ?? '90', 10),
   defaultRedirectUri: process.env['DEFAULT_REDIRECT_URI'] ?? 'http://localhost:3000/dashboard',
+
+  // HTTPS/TLS Configuration
+  https: {
+    enabled: process.env['HTTPS_ENABLED'] === 'true',
+    port: parseInt(process.env['HTTPS_PORT'] ?? '3443', 10),
+    keyPath: process.env['TLS_KEY_PATH'],
+    certPath: process.env['TLS_CERT_PATH'],
+    caPath: process.env['TLS_CA_PATH'],
+    passphrase: process.env['TLS_PASSPHRASE'],
+    forceHttps: process.env['FORCE_HTTPS'] === 'true',
+    trustProxy: process.env['TRUST_PROXY'] === 'true'
+  },
 
   // JWT Configuration
   jwt: {

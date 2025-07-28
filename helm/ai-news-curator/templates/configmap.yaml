@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ai-news-curator.fullname" . }}-config
+  namespace: {{ include "ai-news-curator.namespace" . }}
+  labels:
+    {{- include "ai-news-curator.labels" . | nindent 4 }}
+data:
+  # Application Configuration
+  NODE_ENV: {{ .Values.config.nodeEnv | quote }}
+  PORT: {{ .Values.config.port | quote }}
+  LOG_LEVEL: {{ .Values.config.logLevel | quote }}
+  
+  # Database Configuration
+  DB_PORT: {{ .Values.config.db.port | quote }}
+  DB_NAME: {{ .Values.config.db.name | quote }}
+  DB_USER: {{ .Values.config.db.user | quote }}
+  DB_SSL: {{ .Values.config.db.ssl | quote }}
+  DB_POOL_SIZE: {{ .Values.config.db.poolSize | quote }}
+  DB_CONNECTION_TIMEOUT: {{ .Values.config.db.connectionTimeout | quote }}
+  DB_QUERY_TIMEOUT: {{ .Values.config.db.queryTimeout | quote }}
+  DB_RUN_MIGRATIONS: {{ .Values.config.db.runMigrations | quote }}
+  
+  # Redis Configuration
+  REDIS_PORT: {{ .Values.config.redis.port | quote }}
+  REDIS_DB: {{ .Values.config.redis.db | quote }}
+  
+  # Model Configuration
+  GPT_MODEL: {{ .Values.config.models.gpt.model | quote }}
+  GPT_TEMPERATURE: {{ .Values.config.models.gpt.temperature | quote }}
+  GPT_MAX_TOKENS: {{ .Values.config.models.gpt.maxTokens | quote }}
+  OPENAI_EMBEDDING_MODEL: {{ .Values.config.models.openai.embeddingModel | quote }}
+  
+  # Rate Limiting
+  MAX_REQUESTS_PER_HOUR: {{ .Values.config.rateLimiting.maxRequestsPerHour | quote }}
+  MAX_REQUESTS_PER_DAY: {{ .Values.config.rateLimiting.maxRequestsPerDay | quote }}
+  MAX_ARTICLES_PER_HOUR: {{ .Values.config.rateLimiting.maxArticlesPerHour | quote }}
+  
+  # Content Processing
+  MAX_ARTICLE_LENGTH: {{ .Values.config.content.maxArticleLength | quote }}
+  QUALITY_SCORE_THRESHOLD: {{ .Values.config.content.qualityScoreThreshold | quote }}
+  TAG_CONFIDENCE_THRESHOLD: {{ .Values.config.content.tagConfidenceThreshold | quote }}
+  SOURCE_REPUTATION_THRESHOLD: {{ .Values.config.content.sourceReputationThreshold | quote }}
+  
+  # Performance
+  MAX_CONCURRENT_REQUESTS: {{ .Values.config.performance.maxConcurrentRequests | quote }}
+  DISCOVERY_TIMEOUT_MS: {{ .Values.config.performance.discoveryTimeoutMs | quote }}
+  TAGGING_TIMEOUT_MS: {{ .Values.config.performance.taggingTimeoutMs | quote }}
+  RANKING_TIMEOUT_MS: {{ .Values.config.performance.rankingTimeoutMs | quote }}
+  
+  # Cache TTL
+  CONTENT_METADATA_CACHE_TTL: {{ .Values.config.cache.contentMetadataTtl | quote }}
+  TAG_ASSIGNMENTS_CACHE_TTL: {{ .Values.config.cache.tagAssignmentsTtl | quote }}
+  TREND_DATA_CACHE_TTL: {{ .Values.config.cache.trendDataTtl | quote }}
+  
+  # Security
+  API_KEY_ROTATION_DAYS: {{ .Values.config.security.apiKeyRotationDays | quote }}
+  
+  # Monitoring
+  HEALTH_CHECK_INTERVAL: {{ .Values.config.monitoring.healthCheckInterval | quote }}
+  ENABLE_DEBUG_LOGGING: {{ .Values.config.monitoring.enableDebugLogging | quote }}
+  MOCK_EXTERNAL_APIS: {{ .Values.config.monitoring.mockExternalApis | quote }}
+  
+  # Web Scraping Agent Configuration (Browserbase integration)
+  SCRAPER_AGENT_URL: "https://explorer-browser-agent.example.com"
+  SCRAPER_AGENT_TIMEOUT_MS: "60000"
+  SCRAPER_AGENT_MAX_CONCURRENT: "5"
+  SCRAPER_AGENT_RETRY_ATTEMPTS: "3"
+  SCRAPER_AGENT_RETRY_DELAY_MS: "2000"
+  
+  # Browserbase Integration
+  BROWSERBASE_PROJECT_ID: ""  # Set via secret
+  BROWSERBASE_SESSION_TIMEOUT: "300000"  # 5 minutes
+  BROWSERBASE_VIEWPORT_WIDTH: "1920"
+  BROWSERBASE_VIEWPORT_HEIGHT: "1080"
+  BROWSERBASE_ENABLE_PROXY: "false"

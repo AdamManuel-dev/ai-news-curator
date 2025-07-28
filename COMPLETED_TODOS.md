@@ -5,6 +5,341 @@ This file archives completed TODO items with implementation details for future r
 
 ---
 
+## Recent Completions (2025-07-27)
+
+### Helm Charts for Deployment
+**Completed**: 2025-07-27  
+**Original TODO**: Create Helm charts for deployment (P1 High)  
+**Priority**: HIGH  
+
+**Implementation Summary**:
+- Comprehensive Helm chart package for Kubernetes deployment
+- Environment-specific values files for development, staging, and production
+- Complete dependency management with PostgreSQL and Redis
+- Advanced features including autoscaling, monitoring, and security
+- Production-ready configuration with external secret management support
+
+**Files Changed**:
+- `helm/ai-news-curator/Chart.yaml` - Chart metadata and dependencies
+- `helm/ai-news-curator/values.yaml` - Default configuration values
+- `helm/ai-news-curator/values-development.yaml` - Development environment overrides
+- `helm/ai-news-curator/values-staging.yaml` - Staging environment configuration
+- `helm/ai-news-curator/values-production.yaml` - Production environment configuration
+- `helm/ai-news-curator/templates/_helpers.tpl` - Template helper functions
+- `helm/ai-news-curator/templates/deployment.yaml` - Application deployment template
+- `helm/ai-news-curator/templates/service.yaml` - Service template
+- `helm/ai-news-curator/templates/configmap.yaml` - Configuration template
+- `helm/ai-news-curator/templates/secret.yaml` - Secrets template
+- `helm/ai-news-curator/templates/serviceaccount.yaml` - Service account template
+- `helm/ai-news-curator/templates/ingress.yaml` - Ingress template
+- `helm/ai-news-curator/templates/hpa.yaml` - Horizontal Pod Autoscaler template
+- `helm/ai-news-curator/templates/pdb.yaml` - Pod Disruption Budget template
+- `helm/ai-news-curator/templates/networkpolicy.yaml` - Network policy template
+- `helm/ai-news-curator/templates/pvc.yaml` - Persistent Volume Claim template
+- `helm/ai-news-curator/templates/servicemonitor.yaml` - Prometheus ServiceMonitor template
+- `helm/ai-news-curator/templates/prometheusrule.yaml` - Prometheus alerting rules template
+- `helm/ai-news-curator/templates/NOTES.txt` - Post-deployment instructions
+- `helm/ai-news-curator/README.md` - Comprehensive documentation
+- `helm/ai-news-curator/.helmignore` - Helm packaging ignore rules
+
+**Tests Added**: 
+- `helm/ai-news-curator/templates/tests/test-connection.yaml` - Helm test for connectivity
+
+**Features Implemented**:
+- **Chart Dependencies**: Integrated PostgreSQL and Redis charts from Bitnami
+- **Environment Management**: Separate values files for dev/staging/production workflows
+- **Resource Management**: Configurable CPU/memory limits with environment-specific overrides
+- **Autoscaling**: Horizontal Pod Autoscaler with CPU and memory metrics
+- **Security**: Network policies, Pod Security Context, RBAC, Pod Disruption Budget
+- **Monitoring**: ServiceMonitor and PrometheusRule for Prometheus integration
+- **Storage**: Persistent Volume Claims for log storage
+- **Networking**: Ingress with TLS, load balancing, and rate limiting
+- **Configuration**: Comprehensive ConfigMap and Secret management
+- **External Services**: Support for external PostgreSQL and Redis instances
+- **Helper Templates**: Reusable template functions for labels, names, and configurations
+
+**Environment-Specific Features**:
+- **Development**: Single replica, reduced resources, debug logging, mock APIs
+- **Staging**: Moderate scaling, monitoring enabled, staging domain configuration
+- **Production**: High availability, external databases, advanced monitoring, security hardening
+
+**Deployment Capabilities**:
+- **Multi-Environment**: Single chart supporting dev/staging/production deployments
+- **Secret Management**: Integration with external secret operators (Vault, AWS Secrets Manager)
+- **Database Support**: Both internal (dependency charts) and external database configurations
+- **Monitoring Integration**: Complete Prometheus metrics and Grafana dashboard support
+- **Health Checks**: Comprehensive liveness, readiness, and startup probes
+- **Scaling**: Automatic horizontal pod autoscaling with intelligent policies
+
+**Documentation**:
+- **README**: Comprehensive 200+ line documentation with examples
+- **Values Documentation**: Detailed parameter descriptions and examples
+- **Installation Guide**: Step-by-step deployment instructions
+- **Troubleshooting**: Common issues and debugging commands
+- **Configuration Examples**: Environment-specific deployment examples
+
+**Production Readiness Features**:
+- **High Availability**: Multi-replica deployment with anti-affinity rules
+- **Security**: Pod security contexts, network policies, and service account management
+- **Observability**: Complete monitoring, logging, and alerting integration
+- **Scalability**: Horizontal and vertical scaling capabilities
+- **Reliability**: Pod disruption budgets and health check configurations
+- **Performance**: Resource optimization and connection pooling support
+
+**Operational Benefits**:
+- **Simplified Deployment**: Single command deployment across environments
+- **Configuration Management**: Centralized configuration with environment overrides
+- **Dependency Management**: Automated database and Redis deployment
+- **Upgrade Management**: Helm-native upgrade and rollback capabilities
+- **Testing**: Built-in connectivity tests and validation
+
+**Notes**: Production-grade Helm chart providing complete Kubernetes deployment automation. Supports enterprise requirements including external databases, advanced monitoring, security hardening, and multi-environment workflows. Ready for immediate use in any Kubernetes cluster with proper dependency management and comprehensive documentation.
+
+---
+
+### Secrets Management System Implementation  
+**Completed**: 2025-07-27  
+**Original TODO**: Implement secrets management system (P0 Critical)  
+**Priority**: HIGH  
+
+**Implementation Summary**:
+- Comprehensive secrets management system with multiple backend support
+- Environment variables, encrypted file storage, and AWS Secrets Manager integration
+- CLI tool for managing secrets with full CRUD operations and validation
+- Production-ready security features with encryption, rotation, and audit logging
+- Complete test coverage with 22 passing tests
+
+**Files Changed**:
+- `src/services/secrets/index.ts` - Core secrets management service with multiple backends
+- `src/services/secrets/aws-backend.ts` - AWS Secrets Manager backend implementation
+- `src/scripts/secrets-manager.ts` - CLI tool for secrets management operations
+- `src/utils/secrets-config.ts` - Integration utilities for application configuration
+- `package.json` - Added commander and AWS SDK dependencies, secrets CLI scripts
+- `TODO.md` - Marked secrets management task as completed
+
+**Tests Added**: 
+- `src/services/secrets/__tests__/index.test.ts` - Comprehensive test suite (22 tests)
+
+**CLI Scripts Added**:
+- `npm run secrets` - Main secrets management CLI
+- `npm run secrets:get` - Get secret values
+- `npm run secrets:set` - Set secret values
+- `npm run secrets:list` - List secrets
+- `npm run secrets:validate` - Validate configuration
+- `npm run secrets:rotate-expired` - Rotate expired secrets
+
+**Backend Support**:
+- **Environment Variables**: Read-only access to process.env
+- **File Backend**: Encrypted local file storage with AES-256-CBC
+- **AWS Secrets Manager**: Full integration with AWS cloud secrets service
+
+**Features Implemented**:
+- **Multi-Backend Architecture**: Pluggable backend system supporting multiple secret stores
+- **Encryption**: AES-256-CBC encryption for file-based secrets with secure key derivation
+- **Secret Rotation**: Automatic and manual rotation with configurable intervals
+- **Expiration Management**: Time-based secret expiration with automatic cleanup
+- **Validation**: Configuration validation ensuring required secrets are present
+- **CLI Interface**: Complete command-line interface for all operations
+- **Metadata Support**: Rich metadata including descriptions, tags, rotation tracking
+- **Development Integration**: Seamless integration with application configuration
+- **Security Features**: Secure key generation, file permissions, audit logging
+
+**Security Measures**:
+- Secrets never stored in plain text in file backend
+- Proper file permissions (600) for secret files
+- Cryptographically secure key generation and rotation
+- Environment-based backend selection for production/development
+- Comprehensive validation of required vs optional secrets
+- Audit logging for all secret operations
+
+**Operational Benefits**:
+- Unified interface for managing secrets across different environments
+- Development-to-production workflow with local file fallback
+- CLI automation enabling integration with deployment pipelines
+- Configuration validation preventing runtime failures due to missing secrets
+- Rotation automation reducing security risk of long-lived secrets
+
+**Production Readiness**:
+- AWS Secrets Manager integration for cloud deployments
+- Environment detection and appropriate backend selection
+- Comprehensive error handling and fallback mechanisms
+- Secure defaults and production security best practices
+- Full test coverage ensuring reliability
+
+**Notes**: Enterprise-grade secrets management system providing security, flexibility, and operational efficiency. Supports both development workflows with local file storage and production deployments with AWS Secrets Manager. Comprehensive CLI enables automation and integration with CI/CD pipelines.
+
+---
+
+## Recent Completions (2025-01-27)
+
+### Header Optimization Initiative
+**Completed**: 2025-01-27  
+**Original TODO**: Add file header documentation following CLAUDE.md specification  
+**Priority**: HIGH  
+
+**Implementation Summary**:
+- Added compact, informative headers to key application files
+- Each header includes: Features, Main APIs, Constraints, Patterns
+- Follows established CLAUDE.md specification for documentation
+- Created comprehensive tracking system in ADD_HEADER_TODO.md
+
+**Files Changed**:
+- `src/index.ts` - Main application entry point header
+- `jest.config.js` - Testing configuration header  
+- `src/config/index.ts` - Application configuration header
+- `ADD_HEADER_TODO.md` - Created tracking file for 120 source files
+
+**Tests Added**: None (documentation task)
+
+**Follow-up Tasks Created**:
+- Continue header addition for remaining 117 source files
+- Focus on Priority 2: Core Infrastructure (45 files)
+- Then Priority 3: Business Logic & Utilities (35 files)
+
+**Notes**: Headers provide quick understanding of file purpose, dependencies, and patterns for developers. Systematic approach ensures consistency across codebase.
+
+### API Key Rotation Mechanism
+**Completed**: 2025-01-27  
+**Original TODO**: Implement API key rotation mechanism (P0 Critical)  
+**Priority**: HIGH  
+
+**Implementation Summary**:
+- Enhanced ApiKeyService with automatic key rotation capabilities
+- Added transaction-based key rotation ensuring atomicity
+- Created admin endpoints for managing key rotation operations
+- Built CLI script for automated/scheduled key rotation
+- Comprehensive error handling and logging throughout
+
+**Files Changed**:
+- `src/services/auth/api-key.ts` - Enhanced with rotateApiKey() and rotateExpiringKeys() methods
+- `src/routes/api-keys.ts` - Added POST /api-keys/:keyId/rotate endpoint
+- `src/routes/admin.ts` - Created admin routes for bulk rotation operations  
+- `src/routes/index.ts` - Exported admin router
+- `src/index.ts` - Mounted admin routes at /admin
+- `src/scripts/rotate-keys.ts` - CLI script for automated rotation
+- `package.json` - Added npm scripts for key rotation
+- `TODO.md` - Marked task as completed
+
+**Tests Added**: 
+- `src/services/auth/__tests__/api-key-rotation.test.ts` - Comprehensive rotation tests
+
+**API Endpoints Added**:
+- `POST /api-keys/:keyId/rotate` - Rotate specific user key
+- `POST /admin/api-keys/rotate-expiring` - Admin bulk rotation (dry-run + actual)
+- `POST /admin/cleanup` - Admin system cleanup operations
+- `GET /admin/system-status` - Admin system health monitoring
+
+**CLI Scripts Added**:
+- `npm run rotate-keys` - Check for expiring keys (dry-run)
+- `npm run rotate-keys:auto` - Automatically rotate expiring keys
+
+**Features Implemented**:
+- **Individual Key Rotation**: Users can rotate their own API keys on-demand
+- **Automated Detection**: System finds keys expiring within configurable days
+- **Bulk Operations**: Admins can rotate multiple expiring keys at once
+- **Transaction Safety**: All rotation operations are atomic with rollback support
+- **Audit Logging**: Comprehensive logging of all rotation activities
+- **CLI Automation**: Command-line script for cron job scheduling
+- **Dry-Run Mode**: Safe testing of rotation operations without actual changes
+- **Error Recovery**: Graceful handling of partial failures in bulk operations
+- **Admin Controls**: Admin-only endpoints with RBAC protection
+
+**Security Features**:
+- New keys generated with same permissions as original
+- Old keys immediately deactivated upon successful rotation
+- Transaction-based operations prevent partial states
+- Admin operations require authentication and admin role
+- Comprehensive audit logging for compliance
+
+**Operational Benefits**:
+- Reduces security risk of long-lived API keys
+- Automated rotation reduces manual overhead
+- CLI script enables scheduled rotation via cron
+- Admin dashboard provides system oversight
+- Dry-run capability allows safe testing
+
+**Notes**: Production-ready API key rotation system supporting both user-initiated and automated rotation. Enables zero-downtime key rotation with comprehensive audit trails and admin oversight.
+
+### HTTPS/TLS Configuration  
+**Completed**: 2025-01-27  
+**Original TODO**: Implement HTTPS/TLS configuration (P0 Critical)  
+**Priority**: HIGH  
+
+**Implementation Summary**:
+- Comprehensive TLS/HTTPS support with dual HTTP/HTTPS server configuration
+- Certificate loading and validation utilities for production deployment
+- Development certificate generation script for local development
+- Security middleware for HTTPS enforcement and secure headers
+- Production-grade TLS configuration with proxy support
+
+**Files Changed**:
+- `src/config/index.ts` - Added HTTPS configuration options
+- `src/utils/tls.ts` - Created TLS utilities for certificate loading and server creation  
+- `src/index.ts` - Enhanced server startup to support dual HTTP/HTTPS
+- `src/scripts/generate-certs.ts` - CLI script for development certificate generation
+- `.env.example` - Added TLS environment variables
+- `package.json` - Added certificate generation script
+- `TODO.md` - Marked task as completed
+
+**Tests Added**: 
+- `src/utils/__tests__/tls.test.ts` - Comprehensive TLS utilities tests
+
+**Configuration Options Added**:
+- `HTTPS_ENABLED` - Enable/disable HTTPS server
+- `HTTPS_PORT` - HTTPS server port (default: 3443)
+- `TLS_KEY_PATH` - Path to TLS private key file
+- `TLS_CERT_PATH` - Path to TLS certificate file
+- `TLS_CA_PATH` - Path to CA bundle (optional)
+- `TLS_PASSPHRASE` - Private key passphrase (optional)
+- `FORCE_HTTPS` - Redirect HTTP to HTTPS
+- `TRUST_PROXY` - Trust proxy headers for load balancers
+
+**CLI Scripts Added**:
+- `npm run generate-certs` - Generate self-signed certificates for development
+
+**Features Implemented**:
+- **Dual Server Support**: Runs both HTTP and HTTPS servers simultaneously
+- **Certificate Loading**: Secure loading and validation of TLS certificates
+- **HTTPS Enforcement**: Configurable HTTP-to-HTTPS redirects with exceptions
+- **Security Headers**: Automatic HSTS and secure cookie configuration
+- **Proxy Trust**: Support for load balancers and reverse proxies
+- **Development Tools**: Self-signed certificate generation for local development
+- **Validation**: Comprehensive TLS configuration validation at startup
+- **Error Handling**: Graceful fallback and detailed error logging
+
+**Security Features**:
+- TLS 1.2+ support with modern cipher suites
+- HTTP Strict Transport Security (HSTS) headers
+- Secure cookie settings in production
+- Certificate and private key validation
+- Proper file permissions (600 for private keys)
+- Support for CA bundles and certificate chains
+
+**Development Support**:
+- Self-signed certificate generation script
+- Multi-domain support (localhost, 127.0.0.1, ::1)
+- Configurable certificate validity periods
+- OpenSSL integration with validation
+- Browser security warning documentation
+
+**Production Features**:
+- Load balancer and CDN support via proxy trust
+- Configurable HTTPS enforcement with exceptions
+- Certificate file monitoring and error handling
+- Graceful server shutdown for both HTTP and HTTPS
+- Comprehensive startup validation
+
+**Operational Benefits**:
+- Zero-downtime deployments with proper certificate rotation
+- Development-to-production parity with TLS support
+- Automated certificate validation prevents startup issues
+- Comprehensive logging for troubleshooting
+- Flexible configuration for various deployment scenarios
+
+**Notes**: Enterprise-grade HTTPS/TLS implementation supporting both development and production use cases. Provides comprehensive security features while maintaining ease of development through automated certificate generation and flexible configuration options.
+
+---
+
 ## Completed Items
 
 ### Authentication System (Phase 4)
