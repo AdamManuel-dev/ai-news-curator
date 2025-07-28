@@ -79,6 +79,8 @@ export class EnhancedConnectionPool extends EventEmitter {
       circuitBreakerTimeoutMs: 60000,
       enableAutoRecovery: true,
       monitoringEnabled: true,
+      connectionTimeout: 5000,
+      queryTimeout: 30000,
       ...options,
     };
 
@@ -106,16 +108,16 @@ export class EnhancedConnectionPool extends EventEmitter {
       
       // Timing configuration
       idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: this.options.connectionTimeout || 5000,
-      query_timeout: this.options.queryTimeout || 30000,
-      statement_timeout: this.options.queryTimeout || 30000,
+      connectionTimeoutMillis: this.options.connectionTimeout ?? 5000,
+      query_timeout: this.options.queryTimeout ?? 30000,
+      statement_timeout: this.options.queryTimeout ?? 30000,
       
       // Advanced pool settings
-      acquireTimeoutMillis: this.options.acquireTimeoutMillis,
-      createTimeoutMillis: this.options.createTimeoutMillis,
-      destroyTimeoutMillis: this.options.destroyTimeoutMillis,
-      reapIntervalMillis: this.options.reapIntervalMillis,
-      createRetryIntervalMillis: this.options.createRetryIntervalMillis,
+      acquireTimeoutMillis: this.options.acquireTimeoutMillis ?? 60000,
+      createTimeoutMillis: this.options.createTimeoutMillis ?? 3000,
+      destroyTimeoutMillis: this.options.destroyTimeoutMillis ?? 5000,
+      reapIntervalMillis: this.options.reapIntervalMillis ?? 1000,
+      createRetryIntervalMillis: this.options.createRetryIntervalMillis ?? 200,
       
       // Application name for connection tracking
       application_name: 'ai-news-curator',
