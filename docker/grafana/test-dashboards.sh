@@ -1,7 +1,11 @@
 #!/bin/bash
-
-# Test script to verify Grafana dashboards are working correctly
-# This script starts the monitoring stack and performs basic health checks
+# @fileoverview Grafana dashboard verification and monitoring stack health checker
+# @lastmodified 2025-07-28T01:01:09Z
+# 
+# Features: Service health checks, dashboard verification, metrics endpoint validation, monitoring stack startup
+# Main APIs: check_service(), dashboard validation, Prometheus/Grafana connectivity tests
+# Constraints: Requires Docker Compose, jq, curl, admin:admin Grafana credentials
+# Patterns: Exit on error (set -e), color-coded output, comprehensive service verification
 
 set -e
 

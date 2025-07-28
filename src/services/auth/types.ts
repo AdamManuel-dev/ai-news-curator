@@ -1,10 +1,11 @@
 /**
- * @fileoverview TypeScript type definitions for authentication services.
+ * @fileoverview TypeScript type definitions for authentication services
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Contains interfaces and types used across the authentication system
- * including OAuth providers, user models, and authentication results.
- * 
- * @module services/auth/types
+ * Features: User models, OAuth tokens, JWT payloads, API keys, session data
+ * Main APIs: Type definitions only (no runtime exports)
+ * Constraints: None (pure TypeScript types)
+ * Patterns: All interfaces exported, JSON-serializable structures
  */
 
 /**

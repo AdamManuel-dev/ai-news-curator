@@ -1,8 +1,11 @@
 /**
  * @fileoverview Unit tests for error handling middleware
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Tests custom error types, error handling middleware, and error factory methods
- * to ensure proper error categorization and HTTP response formatting.
+ * Features: Error middleware, HTTP response formatting, async error handling
+ * Main APIs: errorHandler(), asyncHandler(), error normalization
+ * Constraints: Requires logger and config mocking
+ * Patterns: Tests Express error middleware with mock req/res objects
  */
 
 import { Request, Response, NextFunction } from 'express';

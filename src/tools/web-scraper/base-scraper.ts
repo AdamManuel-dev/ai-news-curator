@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Base web scraper with robots.txt compliance and retry logic
+ * @lastmodified 2025-07-28T00:55:47Z
+ * 
+ * Features: Content extraction, robots.txt compliance, retry mechanism, custom parsers
+ * Main APIs: BaseScraper class, scrapeUrl(), fetchContent(), parseContent()
+ * Constraints: Requires axios, cheerio, dependency injection, robots checker
+ * Patterns: Template method, retry with backoff, site-specific parsers, generic fallbacks
+ */
+
 import axios, { AxiosResponse } from 'axios';
 import * as cheerio from 'cheerio';
 import { injectable, inject } from 'inversify';

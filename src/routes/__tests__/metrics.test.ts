@@ -1,5 +1,11 @@
 /**
- * @fileoverview Tests for metrics endpoint routes
+ * @fileoverview Tests for metrics endpoint routes with Prometheus format validation
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Metrics endpoint testing, health check validation, production logging, error handling
+ * Main APIs: GET /metrics, GET /metrics/health, metrics export functionality
+ * Constraints: Requires Express router, supertest, metrics middleware integration
+ * Patterns: Test Prometheus format output, validate content types, mock error scenarios
  */
 
 import request from 'supertest';

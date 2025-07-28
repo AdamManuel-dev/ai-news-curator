@@ -1,13 +1,11 @@
 /**
- * @fileoverview Tags table seed data
+ * @fileoverview Tags table seed data with hierarchical taxonomy
+ * @lastmodified 2025-07-28T00:45:59Z
  * 
- * Creates seed data for content tags including:
- * - Hierarchical topic taxonomy
- * - Technology categories
- * - Difficulty levels
- * - Use cases and domains
- * 
- * @module database/seeds/tags
+ * Features: Hierarchical topics, technologies, frameworks, difficulty levels, use cases
+ * Main APIs: seedTags(), createTag(), TagSeedData interface
+ * Constraints: Requires tags table, handles parent-child relationships, two-pass creation
+ * Patterns: Parent-child mapping, category-based organization, usage count tracking
  */
 
 import { DatabaseConnection } from '@database/connection';

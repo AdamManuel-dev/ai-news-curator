@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Robots.txt compliance checker for ethical web scraping
+ * @lastmodified 2025-07-28T00:55:47Z
+ * 
+ * Features: Robots.txt parsing, crawl delay detection, caching, permissive fallbacks
+ * Main APIs: RobotsChecker class, checkRobotsTxt(), clearCache(), getCacheStats()
+ * Constraints: 24h cache TTL, 5s fetch timeout, defaults to allow on errors
+ * Patterns: LRU-style caching, graceful degradation, domain-based grouping
+ */
+
 import robotsParser from 'robots-parser';
 import axios from 'axios';
 import { injectable, inject } from 'inversify';

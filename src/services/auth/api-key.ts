@@ -1,10 +1,11 @@
 /**
- * @fileoverview API key management service for service-to-service authentication.
+ * @fileoverview API key management service for service-to-service authentication
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides secure API key generation, validation, and management with features
- * like rate limiting, permissions, expiration, and usage tracking.
- * 
- * @module services/auth/api-key
+ * Features: Key generation, validation, rate limiting, permissions, rotation, usage tracking
+ * Main APIs: createApiKey(), validateApiKey(), rotateApiKey(), checkRateLimit()
+ * Constraints: Requires database connection, JWT_SECRET for hashing
+ * Patterns: All methods return promises, crypto-secure generation, transaction-based rotation
  */
 
 import crypto from 'crypto';

@@ -1,11 +1,11 @@
 /**
  * @fileoverview Custom error types for the AI Content Curator Agent
+ * @lastmodified 2025-07-28T00:42:00Z
  *
- * Defines application-specific error classes with proper categorization,
- * HTTP status codes, and contextual information for debugging and monitoring.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * Features: Base AppError class, domain-specific error types, error interfaces, severity levels
+ * Main APIs: AppError, ValidationError, AuthError, NotFoundError, RateLimitError, etc.
+ * Constraints: None, pure error class definitions
+ * Patterns: Error inheritance, status code mapping, operational vs programming errors
  */
 
 /**

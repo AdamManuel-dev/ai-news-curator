@@ -1,11 +1,11 @@
 /**
  * @fileoverview Error handling middleware for Express applications
+ * @lastmodified 2025-07-28T00:42:00Z
  *
- * Comprehensive error handling with logging, monitoring, and proper HTTP responses.
- * Handles both operational and programming errors with appropriate error formatting.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * Features: Error normalization, context extraction, logging, response formatting, process handlers
+ * Main APIs: errorHandler(), asyncHandler(), notFoundHandler(), initializeErrorHandlers()
+ * Constraints: Requires logger, config, custom error types
+ * Patterns: Error normalization, severity-based logging, response formatting, global handlers
  */
 
 import { Request, Response, NextFunction } from 'express';

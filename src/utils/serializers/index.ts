@@ -1,15 +1,11 @@
 /**
  * @fileoverview Response serialization utilities
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides comprehensive response serialization with support for:
- * - Standardized API response formats
- * - Data transformation and filtering
- * - Pagination and metadata
- * - Field inclusion/exclusion
- * - Nested resource serialization
- * - Performance optimization through selective serialization
- * 
- * @module utils/serializers
+ * Features: Standardized API responses, pagination, field filtering, error handling, middleware
+ * Main APIs: ResponseSerializer, ApiResponse, serializerMiddleware(), createSerializer()
+ * Constraints: Requires Express framework, JSON serialization limits, memory usage for large datasets
+ * Patterns: Class-based serializer, middleware factory, response standardization, performance tracking
  */
 
 import { Request, Response } from 'express';

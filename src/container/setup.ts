@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Dependency injection container configuration and service registration
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Service registration, factory configuration, auto-initialization
+ * Main APIs: setupContainer(), exports configured container
+ * Constraints: Requires all service imports, auto-runs on module load
+ * Patterns: Factory functions for services with dependencies, singleton by default
+ */
+
 import 'reflect-metadata';
 import { config } from '@config/index';
 import logger from '@utils/logger';

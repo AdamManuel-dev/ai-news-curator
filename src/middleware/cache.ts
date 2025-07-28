@@ -1,11 +1,11 @@
 /**
  * @fileoverview HTTP caching middleware for Express
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides HTTP-level caching functionality including ETag generation,
- * conditional requests, cache headers, and response caching middleware.
- * 
- * @author AI Content Curator Team
- * @since 1.0.0
+ * Features: Response caching, ETag generation, cache headers, conditional requests, cache invalidation
+ * Main APIs: CacheMiddleware.cache(), etag(), headers(), conditionalCache()
+ * Constraints: Requires CacheService/CacheManager, Redis for distributed caching
+ * Patterns: Middleware factory pattern, response interception, cache key generation
  */
 
 import { Request, Response, NextFunction } from 'express';

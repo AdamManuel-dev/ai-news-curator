@@ -1,12 +1,11 @@
 /**
- * @fileoverview Redis adapter for caching operations in the AI Content Curator Agent.
- *
- * Provides a Redis-based implementation of the cache adapter interface with
- * connection management, error handling, and comprehensive caching operations.
- * Supports both simple key-value operations and advanced Redis features.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * @fileoverview Redis adapter for caching operations in the AI Content Curator Agent
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Redis connection management, caching operations, error handling, metrics
+ * Main APIs: CacheAdapter interface, RedisAdapter class, redisAdapter singleton
+ * Constraints: Requires Redis server, IORedis library, JSON serialization limits
+ * Patterns: Interface implementation, singleton pattern, event-based connection handling
  */
 
 import Redis from 'ioredis';

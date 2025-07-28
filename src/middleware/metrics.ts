@@ -1,14 +1,11 @@
 /**
- * @fileoverview Prometheus metrics middleware for the AI Content Curator Agent.
+ * @fileoverview Prometheus metrics middleware for the AI Content Curator Agent
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides comprehensive metrics collection including:
- * - HTTP request duration histograms
- * - Request rate counters
- * - Active request gauges
- * - Error rate tracking by status code
- * - Custom business metrics
- * 
- * @module middleware/metrics
+ * Features: HTTP metrics, business metrics, Prometheus registry, custom counters/gauges/histograms
+ * Main APIs: metricsMiddleware(), getMetrics(), record*() functions, metrics export
+ * Constraints: Requires prom-client, logger utility
+ * Patterns: Middleware pattern, metric collection, response interception, route normalization
  */
 
 import { Request, Response, NextFunction } from 'express';

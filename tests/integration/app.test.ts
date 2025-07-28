@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Integration tests for Express application endpoints
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Health check endpoint testing, root API info testing, 404 handling, security headers validation
+ * Main APIs: GET /health, GET /, 404 handler tests, security middleware tests
+ * Constraints: Requires running Express app, uses supertest for HTTP assertions
+ * Patterns: Uses Jest test framework, mocks Express app, validates response schemas
+ */
+
 import request from 'supertest';
 import { app } from '../../src/index';
 

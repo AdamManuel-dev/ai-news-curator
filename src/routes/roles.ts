@@ -1,3 +1,13 @@
+/**
+ * @fileoverview RBAC role and permission management routes
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Role assignment, permission grants, user permission queries, cleanup
+ * Main APIs: GET /roles/me, POST /roles/assign, POST /roles/grant-permission, GET /roles/check
+ * Constraints: Requires JWT auth, admin permissions for most operations
+ * Patterns: RBAC middleware, structured responses, expired assignment cleanup
+ */
+
 import { Router } from 'express';
 import { container } from '../container/setup';
 import { TOKENS } from '../container/tokens';

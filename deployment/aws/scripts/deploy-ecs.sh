@@ -1,7 +1,11 @@
 #!/bin/bash
-
-# AI Content Curator - AWS ECS Deployment Script
-# This script deploys the application to Amazon ECS using Fargate
+# @fileoverview AWS ECS Fargate deployment with VPC and Application Load Balancer
+# @lastmodified 2025-07-28T00:59:55Z
+# 
+# Features: VPC creation, security groups, ECS Fargate, ALB, ECR registry
+# Main APIs: create_vpc_resources(), create_ecs_cluster(), deploy_container_group()
+# Constraints: Requires AWS CLI, Docker, jq, valid AWS credentials
+# Patterns: Infrastructure-as-code via JSON, health checks, resource tagging
 
 set -e
 

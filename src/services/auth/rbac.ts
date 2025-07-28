@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Role-Based Access Control (RBAC) service for authorization management
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Role/permission assignment, access checking, expiration handling, cleanup
+ * Main APIs: getUserPermissions(), hasPermission(), assignRole(), grantPermission()
+ * Constraints: Requires PostgreSQL connection pool, dependency injection
+ * Patterns: Transaction-safe operations, temporal permissions, inversify decorators
+ */
+
 import { Pool } from 'pg';
 import { injectable, inject } from 'inversify';
 import { TOKENS } from '../../container/tokens';

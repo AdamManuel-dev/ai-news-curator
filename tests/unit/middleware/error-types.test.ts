@@ -1,8 +1,11 @@
 /**
  * @fileoverview Unit tests for error types and factory
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Tests custom error types and error factory methods to ensure proper
- * error categorization and context handling.
+ * Features: Custom error types, error factory methods, categorization
+ * Main APIs: AppError, ValidationError, NotFoundError, ErrorFactory
+ * Constraints: None
+ * Patterns: Tests error inheritance, factory patterns, context handling
  */
 
 import { 

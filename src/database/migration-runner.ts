@@ -1,11 +1,11 @@
 /**
  * @fileoverview Database migration runner with rollback support
- *
- * Provides a robust migration system with validation, dependency checking,
- * and automatic rollback capabilities for database schema management.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Migration execution, rollbacks, dependency validation, locking
+ * Main APIs: MigrationRunner class, migrate(), rollback(), getStatus()
+ * Constraints: Requires PostgreSQL, migration files, advisory locks
+ * Patterns: Transactional migrations, metadata parsing, cycle detection
  */
 
 import fs from 'fs/promises';

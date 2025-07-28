@@ -1,7 +1,11 @@
 /**
- * @fileoverview User interactions seed data
+ * @fileoverview User interactions seed data placeholder
+ * @lastmodified 2025-07-28T00:45:59Z
  * 
- * @module database/seeds/interactions
+ * Features: User interaction seeding placeholder for behavioral data
+ * Main APIs: seedUserInteractions()
+ * Constraints: Requires content table to exist, defers to user activity
+ * Patterns: Returns empty result, populated by actual user interactions
  */
 
 import { DatabaseConnection } from '@database/connection';

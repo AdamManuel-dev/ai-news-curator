@@ -1,8 +1,11 @@
 /**
  * @fileoverview Database service base class
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Extends BaseService with database connectivity, transaction management,
- * query execution, and database health monitoring capabilities.
+ * Features: Query execution, transaction management, pagination, performance monitoring
+ * Main APIs: query(), withTransaction(), queryWithPagination(), getPerformanceMetrics()
+ * Constraints: Requires PostgreSQL, configurable timeouts, connection pooling
+ * Patterns: Extends BaseService, automatic retries, slow query detection
  */
 
 import { BaseService } from '@services/index';

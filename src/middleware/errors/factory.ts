@@ -1,11 +1,11 @@
 /**
  * @fileoverview Error factory for creating common application errors
+ * @lastmodified 2025-07-28T00:42:00Z
  *
- * Provides convenience methods for creating specific error types with
- * consistent messaging and context formatting.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * Features: Domain-specific error creation, standardized error contexts, factory methods
+ * Main APIs: ErrorFactory.content/user/tag/source/database/external/validation/rateLimit/business
+ * Constraints: Requires custom error types from ./types
+ * Patterns: Static factory methods, error categorization, context enrichment
  */
 
 import {

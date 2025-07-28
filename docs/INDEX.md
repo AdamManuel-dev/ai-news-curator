@@ -1,6 +1,6 @@
-# Documentation Index
+# AI News Curator Documentation
 
-Welcome to the AI Content Curator Agent documentation. This index provides a comprehensive overview of all available documentation and guides.
+Welcome to the comprehensive documentation for the AI News Curator project - a TypeScript/Node.js application that provides intelligent news curation and content management services.
 
 ## 📚 Getting Started
 
@@ -14,6 +14,14 @@ Welcome to the AI Content Curator Agent documentation. This index provides a com
 1. **Installation**: Follow the [README setup guide](../README.md#getting-started)
 2. **Development**: Read the [Development Guide](./guides/DEVELOPMENT.md)
 3. **Testing**: Check the [Testing Guide](./guides/TESTING.md)
+
+### Technology Stack
+- **Runtime**: Node.js 18+ with TypeScript (strict mode)
+- **Framework**: Express.js with middleware pipeline
+- **Database**: PostgreSQL 12+ with connection pooling
+- **Cache**: Redis 6+ with circuit breaker pattern
+- **Testing**: Jest with unit, integration, and E2E tests
+- **Deployment**: Docker containers with Kubernetes orchestration
 
 ## 🏗️ Architecture & Design
 
@@ -58,10 +66,10 @@ Welcome to the AI Content Curator Agent documentation. This index provides a com
 ## 🧩 Modules & Components
 
 ### Core Modules
+- [Authentication & Authorization](./modules/auth.md) - JWT, OAuth, API keys, and RBAC services
+- [Web Scraper](./modules/web-scraper.md) - Content scraping, robots.txt compliance, parsing
 - [Health Module](./modules/health.md) - System monitoring and health checks
 - [Dependency Injection](./modules/dependency-injection.md) - Service container and DI patterns
-- [Cache Module](./modules/cache.md) - Redis-based caching (planned)
-- [Content Module](./modules/content.md) - Content discovery and analysis (planned)
 
 ### Infrastructure
 - **Redis Adapter**: Caching and session storage
@@ -198,9 +206,9 @@ Welcome to the AI Content Curator Agent documentation. This index provides a com
 This documentation is actively maintained and updated with each release. For the most current information, always refer to the latest version in the main branch.
 
 ### Last Updated
-- **Date**: January 2025
+- **Date**: July 28, 2025
 - **Version**: 1.0.0
-- **Contributors**: AI Content Curator Team
+- **Contributors**: AI News Curator Team
 
 ### Feedback
 Found an issue with the documentation? Please [open an issue](https://github.com/your-org/ai-news-curator/issues) or contribute improvements via pull request.

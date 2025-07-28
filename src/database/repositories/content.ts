@@ -1,11 +1,11 @@
 /**
  * @fileoverview Content repository with advanced search and filtering capabilities
- *
- * Handles content storage, retrieval, and complex queries including full-text search,
- * quality filtering, and tag-based filtering.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Full-text search, advanced filtering, analytics, trending content
+ * Main APIs: ContentRepository class, search(), findWithFilters(), getTrending()
+ * Constraints: Requires PostgreSQL full-text search, Content entity types
+ * Patterns: Extends BaseRepository, complex query building, bulk operations
  */
 
 import {

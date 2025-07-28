@@ -1,27 +1,97 @@
-# System Architecture
+# AI News Curator - System Architecture
 
 ## Overview
 
-The AI Content Curator Agent is built using a layered architecture with dependency injection, following clean architecture principles. The system is designed for scalability, maintainability, and testability.
+The AI News Curator is a production-ready content aggregation and curation system built with TypeScript and Node.js. It provides secure, scalable infrastructure for collecting, processing, and serving AI-related news content with advanced features like RBAC, caching, and monitoring.
 
-## Architectural Principles
+## High-Level Architecture
 
-### 1. Separation of Concerns
-- **Controllers**: Handle HTTP requests and responses
-- **Services**: Contain business logic
-- **Adapters**: Interface with external systems
-- **Models**: Define data structures
-- **Middleware**: Cross-cutting concerns
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Load Balancer │────│  API Gateway    │────│   Web Client    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                        Express Application                       │
+├─────────────────────────────────────────────────────────────────┤
+│  Middleware Layer                                               │
+│  • Authentication & RBAC    • Rate Limiting                    │
+│  • Request Logging          • Input Validation                 │
+│  • Error Handling           • Response Serialization          │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                ┌───────────────┼───────────────┐
+                ▼               ▼               ▼
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│   Controllers   │  │    Services     │  │  Repositories   │
+│                 │  │                 │  │                 │
+│ • Health        │  │ • Auth/RBAC     │  │ • Base Repo     │
+│ • Enhanced Base │  │ • Cache         │  │ • Content       │
+│                 │  │ • Vector DB     │  │ • Auditable     │
+└─────────────────┘  └─────────────────┘  └─────────────────┘
+                                │
+                ┌───────────────┼───────────────┐
+                ▼               ▼               ▼
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│   PostgreSQL    │  │      Redis      │  │  Pinecone VDB   │
+│  • User Data    │  │ • Cache         │  │ • Vector Search │
+│  • Content      │  │ • Sessions      │  │ • Embeddings    │
+│  • Metadata     │  │ • Rate Limits   │  │                 │
+└─────────────────┘  └─────────────────┘  └─────────────────┘
+```
 
-### 2. Dependency Injection
-- All dependencies are managed through an IoC container
-- Promotes loose coupling and testability
-- Singleton and transient service lifecycles
+## Core Components
 
-### 3. Layer Independence
-- Higher layers depend on abstractions, not concrete implementations
-- Easy to swap implementations (e.g., different cache providers)
-- Clean testing through mocking
+### 1. Application Layer (`src/index.ts`)
+- **Express Server**: Production-ready HTTP/HTTPS server with comprehensive middleware
+- **Security**: Helmet, CORS, TLS configuration, input sanitization
+- **Graceful Shutdown**: Signal handling for clean application termination
+- **Health Checks**: Built-in monitoring endpoints
+
+### 2. Middleware Layer (`src/middleware/`)
+- **Authentication** (`auth.ts`): JWT token validation and user context
+- **RBAC** (`rbac.ts`): Role-based access control with fine-grained permissions
+- **Rate Limiting** (`rate-limit.ts`): Redis-backed request throttling
+- **Validation** (`validation.ts`): Input validation and XSS prevention
+- **Logging** (`requestLogger.ts`): Request tracking with unique IDs
+- **Error Handling** (`errors/`): Centralized error processing and response formatting
+
+### 3. Controller Layer (`src/controllers/`)
+- **Enhanced Base Controller** (`enhanced-base.ts`): 
+  - Response serialization and data transformation
+  - Pagination support with filtering and sorting
+  - CRUD operation templates with error handling
+  - Caching integration and ETag generation
+
+### 4. Service Layer (`src/services/`)
+- **Authentication Services** (`auth/`):
+  - API Key management with rotation and expiration
+  - OAuth integration for third-party authentication
+  - RBAC service for permission management
+- **Cache Service** (`cache.ts`): Redis abstraction with fallback handling
+- **Vector Database** (`vectordb/`): Pinecone integration for semantic search
+- **Health Monitoring** (`redis-health.ts`): Comprehensive infrastructure monitoring
+
+### 5. Data Layer (`src/database/`)
+- **Connection Management** (`connection.ts`): PostgreSQL connection pooling
+- **Migration System** (`migration-*.ts`): Database schema versioning
+- **Repository Pattern** (`repositories/`):
+  - Base repository with common CRUD operations
+  - Auditable entities with created/updated timestamps
+  - Cacheable repositories with Redis integration
+
+### 6. Infrastructure Components
+
+#### Web Scraping (`src/tools/web-scraper/`)
+- **Base Scraper** (`base-scraper.ts`): Content extraction with retry logic
+- **Robots Compliance** (`robots-checker.ts`): Ethical scraping practices
+- **Request Throttling** (`request-throttle.ts`): Polite crawling patterns
+
+#### Utilities (`src/utils/`)
+- **Logging** (`logger.ts`): Winston-based structured logging
+- **TLS Security** (`tls.ts`): Certificate management and HTTPS configuration
+- **Serialization** (`serializers/`): Data transformation and formatting
 
 ## System Components
 

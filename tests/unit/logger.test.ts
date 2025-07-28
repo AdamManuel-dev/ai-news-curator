@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Unit tests for logging utilities
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Logger instance tests, helper functions, console mocking
+ * Main APIs: logger.info(), logError(), logApiCall(), logBusinessEvent()
+ * Constraints: Requires console mocking in test environment
+ * Patterns: Mocks console methods, tests log helper functions
+ */
+
 import logger, { logError, logApiCall, logBusinessEvent } from '../../src/utils/logger';
 
 describe('Logger', () => {

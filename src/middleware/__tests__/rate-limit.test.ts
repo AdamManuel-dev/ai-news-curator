@@ -1,5 +1,11 @@
 /**
- * @fileoverview Unit tests for rate limiting middleware
+ * @fileoverview Unit tests for rate limiting middleware with dynamic tier-based limits
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Global rate limiting, tier-based limits, API key rate limits, skip conditions
+ * Main APIs: globalRateLimit(), dynamicRateLimit(), getRateLimitInfo(), skipRateLimit()
+ * Constraints: Requires Redis store mock, config values, metrics collection
+ * Patterns: Mock Express middleware, test rate limit headers, validate user tiers
  */
 
 import { Request, Response, NextFunction } from 'express';

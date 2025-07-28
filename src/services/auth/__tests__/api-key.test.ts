@@ -1,5 +1,11 @@
 /**
- * @fileoverview Unit tests for API key service
+ * @fileoverview Unit tests for API key service with CRUD operations and rate limiting
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: API key creation, validation, management, rate limiting, usage tracking
+ * Main APIs: createApiKey(), validateApiKey(), updateApiKey(), revokeApiKey(), checkRateLimit()
+ * Constraints: Requires database connection mock, JWT secret, hashing utilities
+ * Patterns: Mock database queries, test key generation, validate permission systems
  */
 
 import { ApiKeyService, CreateApiKeyParams } from '../api-key';

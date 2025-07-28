@@ -1,17 +1,13 @@
 #!/usr/bin/env node
 
 /**
- * @fileoverview Database seeding CLI
+ * @fileoverview Database seeding CLI with Commander.js interface
+ * @lastmodified 2025-07-28T00:45:59Z
  * 
- * Command-line interface for running database seeds
- * 
- * Usage:
- *   npm run seed                    # Run all seeds
- *   npm run seed -- --seed authors # Run specific seed
- *   npm run seed -- --clear        # Clear all seed data
- *   npm run seed -- --env testing  # Run in specific environment
- * 
- * @module database/seeds/cli
+ * Features: CLI commands for seed management, environment support, progress reporting
+ * Main APIs: seed all, seed run <name>, seed clear, seed list
+ * Constraints: Requires Commander.js, blocks production clearing, validates environments
+ * Patterns: Exit codes on errors, colorized output, detailed summaries
  */
 
 import { Command } from 'commander';

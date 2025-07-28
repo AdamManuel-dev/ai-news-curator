@@ -1,8 +1,11 @@
 /**
  * @fileoverview Cacheable repository base class
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Extends BaseRepository with intelligent caching capabilities for entities,
- * query results, and automatic cache invalidation on data changes.
+ * Features: Entity caching, query caching, invalidation, cache warming
+ * Main APIs: CacheableRepository class, findById(), warmUpCache()
+ * Constraints: Requires CacheService, CacheManager, BaseRepository
+ * Patterns: Extends BaseRepository, configurable TTLs, batch operations
  */
 
 import { BaseRepository } from '@database/repositories/base';

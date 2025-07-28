@@ -1,14 +1,11 @@
 /**
- * @fileoverview Pinecone vector database service for semantic search and content similarity.
+ * @fileoverview Pinecone vector database service for semantic search and content similarity
+ * @lastmodified 2025-07-28T00:55:47Z
  * 
- * Provides comprehensive vector operations including:
- * - Index management and configuration
- * - Vector upsert and deletion operations
- * - Semantic search with filters and metadata
- * - Batch operations for large datasets
- * - Connection health monitoring
- * 
- * @module services/vectordb/pinecone
+ * Features: Vector CRUD operations, semantic search, batch processing, health monitoring
+ * Main APIs: PineconeService class, upsertVector(), searchVectors(), deleteVectors()
+ * Constraints: Requires PINECONE_API_KEY, index must exist, 1536-dim vectors
+ * Patterns: Singleton service, retry with backoff, metrics tracking, connection pooling
  */
 
 import { Pinecone, Index, RecordMetadata } from '@pinecone-database/pinecone';

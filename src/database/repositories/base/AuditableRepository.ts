@@ -1,8 +1,11 @@
 /**
  * @fileoverview Auditable repository base class
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Extends BaseRepository with audit logging capabilities for tracking
- * data changes, user actions, and compliance requirements.
+ * Features: Audit trails, versioning, change tracking, compliance logging
+ * Main APIs: AuditableRepository class, createWithAudit(), getAuditHistory()
+ * Constraints: Requires audit table, BaseRepository, container DI
+ * Patterns: Extends BaseRepository, optimistic locking, soft deletes
  */
 
 import { BaseRepository } from '@database/repositories/base';

@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Global test setup and environment configuration
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Environment mocking, timeouts, console overrides
+ * Main APIs: Global Jest configuration, process.env setup
+ * Constraints: Requires test environment variables
+ * Patterns: Mocks console methods in test mode
+ */
+
 // Global test setup
 import { config } from '@config/index';
 

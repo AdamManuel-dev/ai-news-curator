@@ -1,10 +1,11 @@
 /**
- * @fileoverview OAuth 2.0 authentication service implementation.
+ * @fileoverview OAuth 2.0 authentication service implementation
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides OAuth 2.0 authorization code flow with support for multiple providers.
- * Handles token management, user creation/authentication, and session management.
- * 
- * @module services/auth/oauth
+ * Features: Multi-provider OAuth flow, JWT token generation, user creation, token refresh
+ * Main APIs: generateAuthUrl(), authenticateUser(), refreshAccessToken(), verifyAccessToken()
+ * Constraints: Requires OAuth provider configs, database connection, JWT secrets
+ * Patterns: All async methods, provider normalization, secure state generation
  */
 
 import { Request } from 'express';

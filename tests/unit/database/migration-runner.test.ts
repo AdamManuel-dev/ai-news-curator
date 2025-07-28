@@ -1,8 +1,11 @@
 /**
  * @fileoverview Tests for database migration runner
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Comprehensive tests for migration execution, rollback, validation,
- * and error handling scenarios.
+ * Features: Migration execution, rollback, validation, error handling
+ * Main APIs: migrate(), rollback(), validate(), getStatus()
+ * Constraints: Requires Pool and filesystem mocking
+ * Patterns: Mocks database operations and file system access
  */
 
 import { Pool, PoolClient } from 'pg';

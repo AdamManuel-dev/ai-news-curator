@@ -1,8 +1,11 @@
 /**
  * @fileoverview Tests for enhanced dependency injection container
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Tests advanced container features including lifecycle management,
- * circular dependency detection, and scoped services.
+ * Features: Lifecycle management, circular dependency detection, scoped services
+ * Main APIs: registerSingleton(), resolve(), createScope(), validate()
+ * Constraints: Requires logger and container mocking
+ * Patterns: Tests service registration, resolution, and validation
  */
 
 import { 

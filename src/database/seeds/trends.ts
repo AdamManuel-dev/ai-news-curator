@@ -1,7 +1,11 @@
 /**
- * @fileoverview Trends seed data
+ * @fileoverview Trends seed data placeholder for analysis system
+ * @lastmodified 2025-07-28T00:45:59Z
  * 
- * @module database/seeds/trends
+ * Features: Trends seeding placeholder for content analysis
+ * Main APIs: seedTrends()
+ * Constraints: Requires content analysis system, defers to trend detection
+ * Patterns: Returns empty result, populated by trend analysis algorithms
  */
 
 import { DatabaseConnection } from '@database/connection';

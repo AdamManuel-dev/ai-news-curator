@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Tests for BaseScraper with comprehensive web scraping functionality
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: URL scraping, robots.txt compliance, retry logic, content extraction, custom parsers
+ * Main APIs: scrapeUrl(), updateConfig(), getConfig(), robots.txt validation
+ * Constraints: Requires axios mock, robots checker, request throttle, logger dependencies
+ * Patterns: Mock HTTP requests, test retry mechanisms, validate content extraction
+ */
+
 import { BaseScraper } from '../base-scraper';
 import { RobotsChecker } from '../robots-checker';
 import { RequestThrottle } from '../request-throttle';

@@ -1,7 +1,11 @@
 #!/bin/bash
-
-# AI Content Curator - Azure AKS Deployment Script
-# This script deploys the application to Azure Kubernetes Service
+# @fileoverview Azure AKS deployment with auto-scaling and ingress controller
+# @lastmodified 2025-07-28T00:59:55Z
+# 
+# Features: AKS cluster, ACR registry, NGINX ingress, cert-manager, monitoring
+# Main APIs: create_aks_cluster(), install_nginx_ingress(), deploy_application()
+# Constraints: Requires Azure CLI, kubectl, helm, Docker
+# Patterns: Resource group isolation, addon management, Azure monitoring integration
 
 set -e
 

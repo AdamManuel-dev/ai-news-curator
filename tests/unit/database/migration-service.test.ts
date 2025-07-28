@@ -1,8 +1,11 @@
 /**
  * @fileoverview Tests for migration service
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Tests service integration, health checks, and application lifecycle
- * integration for the migration system.
+ * Features: Service integration, health checks, lifecycle management
+ * Main APIs: init(), runPendingMigrations(), rollbackToVersion(), healthCheck()
+ * Constraints: Requires Pool and MigrationRunner mocking
+ * Patterns: Tests auto-migration, validation, and error scenarios
  */
 
 import { Pool } from 'pg';

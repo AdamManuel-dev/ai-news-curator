@@ -1,11 +1,11 @@
 /**
  * @fileoverview Database connection management for PostgreSQL
- *
- * Provides connection pooling, transaction management, and query execution
- * with proper error handling and monitoring.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Connection pooling, transactions, query execution, health checks
+ * Main APIs: DatabaseConnection class, getDatabase(), initializeDatabase()
+ * Constraints: Requires PostgreSQL, config.database settings
+ * Patterns: Singleton connection, pool monitoring, auto-migrations
  */
 
 import { Pool, PoolClient, QueryResult } from 'pg';

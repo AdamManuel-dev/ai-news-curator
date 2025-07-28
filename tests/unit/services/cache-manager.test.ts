@@ -1,8 +1,11 @@
 /**
  * @fileoverview Tests for advanced cache manager
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Tests cache warming, invalidation patterns, circuit breaker functionality,
- * and statistics monitoring for the cache management system.
+ * Features: Cache warming, invalidation patterns, circuit breaker, statistics
+ * Main APIs: get(), set(), warmCache(), invalidatePattern(), healthCheck()
+ * Constraints: Requires CacheService mocking
+ * Patterns: Tests cache-aside pattern, circuit breaker, warming strategies
  */
 
 import { CacheManager, CacheWarmingStrategies, InvalidationPatterns } from '@services/cache-manager';

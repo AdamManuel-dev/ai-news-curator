@@ -1,798 +1,822 @@
 # Development Guide
 
-## Overview
-
-This guide provides comprehensive information for developers working on the AI Content Curator Agent. It covers setup, development workflow, coding standards, and best practices.
-
-## Table of Contents
-
-- [Getting Started](#getting-started)
-- [Development Environment](#development-environment)
-- [Project Structure](#project-structure)
-- [Coding Standards](#coding-standards)
-- [Development Workflow](#development-workflow)
-- [Testing](#testing)
-- [Debugging](#debugging)
-- [Performance](#performance)
-- [Security](#security)
-- [Contributing](#contributing)
-
 ## Getting Started
 
-### Prerequisites
+This guide covers setting up the AI News Curator development environment, development workflows, testing practices, and contribution guidelines.
 
-- **Node.js**: >= 18.0.0 (LTS recommended)
-- **npm**: >= 8.0.0
-- **Redis**: >= 6.0.0
-- **Git**: >= 2.20.0
-- **Docker**: >= 20.10.0 (optional)
+## Prerequisites
 
-### Installation
+### Required Software
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd ai-news-curator
-   ```
+- **Node.js**: Version 18.x or higher
+- **PostgreSQL**: Version 12.x or higher
+- **Redis**: Version 6.x or higher
+- **Git**: Version 2.x or higher
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+### Optional Tools
 
-3. **Set up environment**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your local configuration
-   ```
+- **Docker**: For containerized development
+- **Docker Compose**: For local service orchestration
+- **VS Code**: Recommended IDE with TypeScript support
 
-4. **Start dependencies**
-   ```bash
-   # Start Redis locally
-   redis-server
-   
-   # Or use Docker
-   docker run -d -p 6379:6379 redis:7-alpine
-   ```
+## Environment Setup
 
-5. **Verify installation**
-   ```bash
-   npm run build
-   npm test
-   npm run dev
-   ```
-
-### First-time Setup
+### 1. Clone Repository
 
 ```bash
-# Install recommended VS Code extensions
-code --install-extension ms-vscode.vscode-typescript-next
-code --install-extension esbenp.prettier-vscode
-code --install-extension bradlc.vscode-tailwindcss
-
-# Set up pre-commit hooks
-npx husky install
+git clone https://github.com/your-org/ai-news-curator.git
+cd ai-news-curator
 ```
 
-## Development Environment
+### 2. Install Dependencies
 
-### Recommended Tools
-
-- **IDE**: Visual Studio Code with TypeScript support
-- **Extensions**:
-  - TypeScript Hero
-  - ESLint
-  - Prettier
-  - Jest Runner
-  - REST Client
-  - Docker
-
-### VS Code Configuration
-
-Create `.vscode/settings.json`:
-```json
-{
-  "typescript.preferences.importModuleSpecifier": "relative",
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-  "jest.autoRun": "watch",
-  "typescript.suggest.autoImports": true
-}
+```bash
+npm install
 ```
 
-### Environment Variables
+### 3. Environment Configuration
 
-| Variable | Development Value | Description |
-|----------|-------------------|-------------|
-| `NODE_ENV` | `development` | Environment identifier |
-| `PORT` | `3000` | Server port |
-| `REDIS_HOST` | `localhost` | Redis hostname |
-| `REDIS_PORT` | `6379` | Redis port |
-| `LOG_LEVEL` | `debug` | Logging verbosity |
-| `ENABLE_DEBUG_LOGGING` | `true` | Enable debug logs |
+Create environment files for different environments:
 
-## Project Structure
+**`.env.development`:**
+```bash
+# Server Configuration
+NODE_ENV=development
+PORT=3000
+LOG_LEVEL=debug
 
-```
-src/
-├── adapters/          # External service adapters
-│   ├── index.ts
-│   └── redis.ts       # Redis caching adapter
-├── config/            # Configuration management
-│   └── index.ts       # App configuration
-├── container/         # Dependency injection
-│   ├── Container.ts   # DI container implementation
-│   ├── index.ts       # Container exports
-│   ├── setup.ts       # Service registration
-│   └── tokens.ts      # Service tokens
-├── controllers/       # HTTP request handlers
-│   ├── health.ts      # Health check controller
-│   └── index.ts       # Base controller
-├── middleware/        # Express middleware
-│   ├── index.ts
-│   ├── requestLogger.ts
-│   └── validation.ts
-├── models/            # Data models
-│   └── index.ts
-├── repositories/      # Data access layer
-│   └── index.ts
-├── routes/            # Route definitions
-│   ├── health.ts      # Health routes
-│   └── index.ts
-├── services/          # Business logic
-│   ├── cache.ts       # Cache service
-│   └── index.ts       # Base service
-├── tools/             # External tools/APIs
-│   └── index.ts
-├── types/             # TypeScript definitions
-│   └── index.ts
-├── utils/             # Utility functions
-│   ├── index.ts
-│   └── logger.ts      # Logging utilities
-└── index.ts           # Application entry point
+# Database Configuration
+DATABASE_URL=postgresql://username:password@localhost:5432/ai_curator_dev
+DB_POOL_SIZE=10
+
+# Redis Configuration
+REDIS_URL=redis://localhost:6379
+REDIS_CACHE_TTL=3600
+
+# Authentication
+JWT_SECRET=your-development-jwt-secret-key
+JWT_EXPIRES_IN=1h
+JWT_REFRESH_EXPIRES_IN=7d
+
+# API Keys
+API_KEY_ROTATION_DAYS=90
+API_KEY_DEFAULT_RATE_LIMIT=1000
+
+# External Services
+PINECONE_API_KEY=your-pinecone-api-key
+PINECONE_ENVIRONMENT=us-west1-gcp
+PINECONE_INDEX_NAME=ai-content-dev
+
+# Monitoring
+ENABLE_DEBUG_LOGGING=true
+ENABLE_METRICS=true
+PROMETHEUS_PORT=9090
+
+# Security
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+CORS_ORIGIN=http://localhost:3000
 ```
 
-### Naming Conventions
-
-- **Files**: kebab-case (`user-service.ts`)
-- **Directories**: kebab-case (`user-management/`)
-- **Classes**: PascalCase (`UserService`)
-- **Interfaces**: PascalCase with `I` prefix (`IUserService`)
-- **Functions**: camelCase (`getUserById`)
-- **Constants**: UPPER_SNAKE_CASE (`MAX_RETRY_ATTEMPTS`)
-- **Enums**: PascalCase (`UserStatus`)
-
-## Coding Standards
-
-### TypeScript
-
-- Use **strict mode** with comprehensive type checking
-- Prefer **interfaces** over types for object shapes
-- Use **type assertions** sparingly, prefer type guards
-- Always specify **return types** for public methods
-- Use **generic constraints** where appropriate
-
-```typescript
-// Good
-interface UserService {
-  findById(id: string): Promise<User | null>;
-  create(userData: CreateUserDTO): Promise<User>;
-}
-
-// Bad
-interface UserService {
-  findById(id: any): any;
-  create(userData: any): any;
-}
+**`.env.test`:**
+```bash
+NODE_ENV=test
+DATABASE_URL=postgresql://username:password@localhost:5432/ai_curator_test
+REDIS_URL=redis://localhost:6379/1
+JWT_SECRET=test-jwt-secret
+LOG_LEVEL=error
 ```
 
-### ESLint Configuration
+### 4. Database Setup
 
-The project uses Airbnb TypeScript configuration with additional rules:
+```bash
+# Create databases
+createdb ai_curator_dev
+createdb ai_curator_test
 
-```json
-{
-  "extends": [
-    "@typescript-eslint/recommended",
-    "airbnb-typescript/base",
-    "prettier"
-  ],
-  "rules": {
-    "@typescript-eslint/explicit-return-type": "error",
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/prefer-nullish-coalescing": "error",
-    "prefer-const": "error",
-    "no-var": "error"
-  }
-}
+# Run migrations
+npm run migrate:up
+
+# Seed development data
+npm run seed
 ```
 
-### Code Style
+### 5. Start Development Services
 
-- **Line length**: 100 characters maximum
-- **Indentation**: 2 spaces
-- **Quotes**: Single quotes for strings
-- **Semicolons**: Always required
-- **Trailing commas**: Always include
+**Option A: Local Services**
+```bash
+# Start PostgreSQL
+sudo systemctl start postgresql
 
-### JSDoc Standards
+# Start Redis
+sudo systemctl start redis
 
-Document all public APIs with comprehensive JSDoc:
+# Start application
+npm run dev
+```
 
-```typescript
-/**
- * Retrieves user data by ID with caching support.
- * 
- * @param userId - Unique identifier for the user
- * @param options - Additional query options
- * @param options.includeDeleted - Whether to include soft-deleted users
- * @param options.useCache - Whether to use cached data
- * @returns Promise resolving to user data or null if not found
- * 
- * @throws {ValidationError} When userId is invalid
- * @throws {DatabaseError} When database query fails
- * 
- * @example
- * ```typescript
- * const user = await userService.findById('123', { useCache: true });
- * if (user) {
- *   console.log('Found user:', user.email);
- * }
- * ```
- * 
- * @since 1.0.0
- */
-async findById(
-  userId: string,
-  options: FindUserOptions = {}
-): Promise<User | null> {
-  // Implementation
-}
+**Option B: Docker Compose**
+```bash
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f app
 ```
 
 ## Development Workflow
 
-### Available Scripts
+### Project Structure
+
+```
+src/
+├── adapters/           # External service adapters
+├── config/             # Configuration management
+├── container/          # Dependency injection
+├── controllers/        # HTTP request handlers
+├── database/           # Database connections, migrations, repositories
+├── middleware/         # Express middleware
+├── models/             # Data models and types
+├── routes/             # API route definitions
+├── services/           # Business logic services
+├── tools/              # Utility tools (web scraper, etc.)
+├── types/              # TypeScript type definitions
+├── utils/              # Utility functions
+└── validation/         # Input validation schemas
+```
+
+### Code Style
+
+The project uses ESLint and Prettier for consistent code formatting:
 
 ```bash
-# Development
-npm run dev          # Start with hot reload
-npm run build        # Build for production
-npm run start        # Start production build
+# Check code style
+npm run lint
 
-# Code Quality
-npm run lint         # Run ESLint
-npm run lint:fix     # Fix ESLint issues
-npm run type-check   # TypeScript compilation check
-npm run format       # Format code with Prettier
+# Fix auto-fixable issues
+npm run lint:fix
 
-# Testing
-npm test             # Run all tests
-npm run test:unit    # Run unit tests
-npm run test:integration # Run integration tests
-npm run test:e2e     # Run end-to-end tests
-npm run test:watch   # Run tests in watch mode
-npm run test:coverage # Generate coverage report
-
-# Database
-npm run db:migrate   # Run database migrations (planned)
-npm run db:seed      # Seed database (planned)
-npm run db:reset     # Reset database (planned)
-
-# Utilities
-npm run clean        # Clean build artifacts
-npm run docs         # Generate documentation
-npm run analyze      # Bundle analysis
+# Format code
+npm run format
 ```
+
+**Key Style Guidelines:**
+- Use TypeScript strict mode
+- Prefer explicit return types for functions
+- Use meaningful variable and function names
+- Follow single responsibility principle
+- Add JSDoc comments for public APIs
 
 ### Git Workflow
 
-1. **Create feature branch**
-   ```bash
-   git checkout -b feature/content-discovery
-   ```
-
-2. **Make changes with conventional commits**
-   ```bash
-   git add .
-   git commit -m "feat: add content discovery service"
-   ```
-
-3. **Run quality checks**
-   ```bash
-   npm run lint
-   npm run type-check
-   npm test
-   ```
-
-4. **Push and create PR**
-   ```bash
-   git push origin feature/content-discovery
-   # Create pull request via GitHub UI
-   ```
-
-### Commit Message Convention
-
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
-
+**Branch Naming Convention:**
 ```
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
+feature/description-of-feature
+bugfix/description-of-bug
+hotfix/critical-issue-description
 ```
 
-**Types**:
+**Commit Message Format:**
+```
+type(scope): brief description
+
+Detailed explanation of changes made.
+
+Fixes #123
+```
+
+**Types:**
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
 - `style`: Code style changes
 - `refactor`: Code refactoring
-- `test`: Adding or modifying tests
-- `chore`: Maintenance tasks
+- `test`: Test changes
+- `chore`: Build/tool changes
 
-**Examples**:
+### Development Commands
+
 ```bash
-feat: add Redis caching adapter
-fix(health): resolve memory leak in health checks
-docs: update API documentation
-test: add integration tests for cache service
+# Development server with hot reload
+npm run dev
+
+# Debug mode with inspector
+npm run dev:debug
+
+# Build for production
+npm run build
+
+# Type checking
+npm run typecheck
+
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Test coverage
+npm run test:coverage
+
+# Database migrations
+npm run migrate:up
+npm run migrate:down
+npm run migrate:status
+
+# Database seeding
+npm run seed
+npm run seed:clear
 ```
 
-## Testing
+## Testing Strategy
 
-### Testing Strategy
-
-- **Unit Tests**: Test individual functions and classes
-- **Integration Tests**: Test service interactions
-- **E2E Tests**: Test complete workflows
-- **Contract Tests**: Test API contracts
-
-### Test Organization
+### Test Structure
 
 ```
 tests/
-├── unit/              # Unit tests
-│   ├── services/
-│   ├── utils/
-│   └── controllers/
-├── integration/       # Integration tests
-│   ├── api/
-│   └── services/
-├── e2e/              # End-to-end tests
-│   └── workflows/
-├── fixtures/         # Test data
-└── helpers/          # Test utilities
+├── unit/               # Unit tests for individual components
+├── integration/        # Integration tests for service interactions
+├── e2e/               # End-to-end tests for complete workflows
+└── setup.ts           # Test configuration and setup
 ```
 
-### Writing Tests
+### Unit Testing
 
-#### Unit Test Example
+Unit tests focus on individual functions and classes:
 
 ```typescript
-// tests/unit/services/cache.test.ts
-import { CacheService } from '@services/cache';
-import { createTestContainer } from '@tests/helpers/container';
-
-describe('CacheService', () => {
-  let cacheService: CacheService;
-  let mockRedisAdapter: jest.Mocked<ICacheAdapter>;
+// Example: Service unit test
+describe('ApiKeyService', () => {
+  let service: ApiKeyService;
+  let mockDb: jest.Mocked<DatabaseConnection>;
 
   beforeEach(() => {
-    const container = createTestContainer();
-    mockRedisAdapter = container.resolve(TOKENS.REDIS_ADAPTER);
-    cacheService = container.resolve(TOKENS.CACHE_SERVICE);
+    mockDb = createMockDatabase();
+    service = new ApiKeyService(mockDb);
   });
 
-  describe('get', () => {
-    it('should return cached value when key exists', async () => {
-      mockRedisAdapter.get.mockResolvedValue('cached-value');
+  describe('createApiKey', () => {
+    it('should generate secure API key', async () => {
+      const params = {
+        name: 'Test Key',
+        userId: 'user-123',
+        permissions: ['content:read']
+      };
 
-      const result = await cacheService.get('test-key');
+      const result = await service.createApiKey(params);
 
-      expect(result).toBe('cached-value');
-      expect(mockRedisAdapter.get).toHaveBeenCalledWith('test-key');
+      expect(result.rawKey).toMatch(/^aic_[a-f0-9]{64}$/);
+      expect(result.apiKey.name).toBe('Test Key');
+      expect(mockDb.query).toHaveBeenCalledWith(
+        expect.stringContaining('INSERT INTO api_keys'),
+        expect.any(Array)
+      );
     });
 
-    it('should return null when key does not exist', async () => {
-      mockRedisAdapter.get.mockResolvedValue(null);
-
-      const result = await cacheService.get('non-existent-key');
-
-      expect(result).toBeNull();
+    it('should validate required parameters', async () => {
+      await expect(
+        service.createApiKey({ name: '', userId: '', permissions: [] })
+      ).rejects.toThrow('Name is required');
     });
   });
 });
 ```
 
-#### Integration Test Example
+### Integration Testing
+
+Integration tests verify service interactions:
 
 ```typescript
-// tests/integration/health.test.ts
-import request from 'supertest';
-import { app } from '@/index';
+// Example: API integration test
+describe('API Key Management', () => {
+  let app: Express;
+  let authToken: string;
 
-describe('Health Endpoints', () => {
-  describe('GET /health', () => {
-    it('should return health status', async () => {
+  beforeAll(async () => {
+    app = await createTestApp();
+    authToken = await getTestAuthToken();
+  });
+
+  afterAll(async () => {
+    await cleanupTestData();
+  });
+
+  describe('POST /api-keys', () => {
+    it('should create API key with valid token', async () => {
       const response = await request(app)
-        .get('/health')
-        .expect(200);
+        .post('/api-keys')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Integration Test Key',
+          permissions: ['content:read']
+        })
+        .expect(201);
 
-      expect(response.body).toMatchObject({
-        success: true,
-        data: {
-          status: expect.stringMatching(/^(healthy|degraded|unhealthy)$/),
-          version: '1.0.0',
-        },
-      });
+      expect(response.body.apiKey.name).toBe('Integration Test Key');
+      expect(response.body.rawKey).toMatch(/^aic_/);
+    });
+
+    it('should reject unauthorized requests', async () => {
+      await request(app)
+        .post('/api-keys')
+        .send({ name: 'Test Key' })
+        .expect(401);
     });
   });
 });
 ```
 
-### Test Utilities
+### End-to-End Testing
 
-Create reusable test utilities:
+E2E tests verify complete user workflows:
 
 ```typescript
-// tests/helpers/container.ts
-export function createTestContainer(): Container {
-  const container = new Container();
-  
-  // Register test doubles
-  container.registerInstance(TOKENS.LOGGER, createTestLogger());
-  container.registerInstance(TOKENS.CONFIG, createTestConfig());
-  container.registerInstance(TOKENS.REDIS_ADAPTER, createMockRedisAdapter());
-  
-  return container;
+// Example: E2E content workflow
+describe('Content Management Workflow', () => {
+  it('should complete full content lifecycle', async () => {
+    // 1. Create user and get auth token
+    const user = await createTestUser();
+    const token = await authenticateUser(user);
+
+    // 2. Create content
+    const content = await createContent(token, {
+      title: 'Test Article',
+      content: 'Article content...'
+    });
+
+    // 3. Retrieve content
+    const retrieved = await getContent(token, content.id);
+    expect(retrieved.title).toBe('Test Article');
+
+    // 4. Update content
+    await updateContent(token, content.id, {
+      title: 'Updated Article'
+    });
+
+    // 5. Delete content
+    await deleteContent(token, content.id);
+
+    // 6. Verify deletion
+    await expect(getContent(token, content.id)).rejects.toThrow();
+  });
+});
+```
+
+### Test Data Management
+
+```typescript
+// Test utilities
+export async function createTestUser(overrides = {}) {
+  return await userRepository.create({
+    email: 'test@example.com',
+    password: 'hashedPassword',
+    role: 'user',
+    ...overrides
+  });
 }
 
-// tests/helpers/fixtures.ts
-export const userFixtures = {
-  validUser: {
-    id: 'user-123',
-    email: 'test@example.com',
-    name: 'Test User',
-  },
-  invalidUser: {
-    id: '',
-    email: 'invalid-email',
-  },
-};
+export async function getTestAuthToken(user?: User) {
+  const testUser = user || await createTestUser();
+  return jwt.sign({ userId: testUser.id }, process.env.JWT_SECRET);
+}
+
+export async function cleanupTestData() {
+  await db.query('DELETE FROM api_keys WHERE name LIKE \'%Test%\'');
+  await db.query('DELETE FROM users WHERE email LIKE \'%test%\'');
+}
 ```
 
 ## Debugging
 
-### Development Debugging
+### VS Code Configuration
 
-#### VS Code Debugger
-
-Create `.vscode/launch.json`:
+**`.vscode/launch.json`:**
 ```json
 {
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug API",
+      "name": "Debug Server",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/src/index.ts",
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-      "runtimeArgs": ["-r", "ts-node/register"],
       "env": {
-        "NODE_ENV": "development",
-        "LOG_LEVEL": "debug"
+        "NODE_ENV": "development"
       },
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen"
+      "runtimeArgs": ["-r", "ts-node/register"],
+      "sourceMaps": true,
+      "envFile": "${workspaceFolder}/.env.development"
+    },
+    {
+      "name": "Debug Tests",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "args": ["--runInBand"],
+      "env": {
+        "NODE_ENV": "test"
+      },
+      "envFile": "${workspaceFolder}/.env.test"
     }
   ]
 }
 ```
 
-#### Console Debugging
+### Logging
+
+Use structured logging for debugging:
 
 ```typescript
-// Use structured logging instead of console.log
-logger.debug('Processing content', {
-  contentId,
-  tags,
-  processingTime: Date.now() - startTime,
+// Debug logging examples
+logger.debug('User authentication attempt', {
+  userId: user.id,
+  method: 'JWT',
+  timestamp: new Date().toISOString()
 });
 
-// Use debugger statement for breakpoints
-debugger; // Will pause execution when debugging
+logger.info('API key created', {
+  keyId: apiKey.id,
+  userId: apiKey.userId,
+  permissions: apiKey.permissions.length
+});
+
+logger.error('Database query failed', {
+  query: 'SELECT * FROM users',
+  error: error.message,
+  stack: error.stack
+});
 ```
 
-### Production Debugging
-
-#### Log Analysis
-
-```bash
-# View application logs
-npm run logs
-
-# Filter by level
-npm run logs -- --level error
-
-# Follow logs in real-time
-npm run logs -- --follow
-```
-
-#### Health Check Debugging
-
-```bash
-# Check detailed health status
-curl http://localhost:3000/health/detailed | jq
-
-# Monitor health continuously
-watch -n 5 'curl -s http://localhost:3000/health | jq .data.status'
-```
-
-## Performance
-
-### Monitoring
-
-#### Performance Metrics
-
-Key metrics to monitor:
-- Response time (p50, p95, p99)
-- Memory usage
-- CPU utilization
-- Cache hit rate
-- Database query time
-
-#### Profiling
+### Performance Profiling
 
 ```typescript
-// Profile async operations
-const startTime = process.hrtime.bigint();
-await operation();
-const endTime = process.hrtime.bigint();
-const duration = Number(endTime - startTime) / 1_000_000; // Convert to ms
+// Performance measurement
+const startTime = Date.now();
+const result = await expensiveOperation();
+const duration = Date.now() - startTime;
 
 logger.info('Operation completed', {
-  operation: 'contentAnalysis',
+  operation: 'expensiveOperation',
   duration,
-  contentId,
+  resultSize: result.length
 });
 ```
 
-### Optimization
+## Code Quality
 
-#### Caching Strategy
+### Type Safety
+
+Leverage TypeScript for type safety:
 
 ```typescript
-// Implement cache-aside pattern
-async getContent(id: string): Promise<Content | null> {
-  // Try cache first
-  const cached = await this.cache.get<Content>(`content:${id}`);
-  if (cached) {
-    return cached;
-  }
+// Define strict interfaces
+interface CreateUserRequest {
+  email: string;
+  password: string;
+  role: UserRole;
+}
 
-  // Fetch from database
-  const content = await this.repository.findById(id);
-  if (content) {
-    // Cache for future requests
-    await this.cache.set(`content:${id}`, content, 3600); // 1 hour TTL
+// Use generic types
+class Repository<T extends BaseEntity> {
+  async findById(id: string): Promise<T | null> {
+    // Implementation
   }
+}
 
-  return content;
+// Strict function signatures
+async function createUser(data: CreateUserRequest): Promise<User> {
+  // Implementation
 }
 ```
 
-#### Database Optimization
+### Error Handling
+
+Implement consistent error handling:
+
+```typescript
+// Custom error classes
+export class ValidationError extends Error {
+  constructor(message: string, public field: string) {
+    super(message);
+    this.name = 'ValidationError';
+  }
+}
+
+// Error handling middleware
+export const errorHandler = (
+  error: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  logger.error('Request error', {
+    error: error.message,
+    stack: error.stack,
+    url: req.url,
+    method: req.method
+  });
+
+  if (error instanceof ValidationError) {
+    return res.status(400).json({
+      error: 'Validation failed',
+      field: error.field,
+      message: error.message
+    });
+  }
+
+  res.status(500).json({ error: 'Internal server error' });
+};
+```
+
+### Documentation
+
+Maintain comprehensive documentation:
+
+```typescript
+/**
+ * Creates a new API key for service authentication.
+ * 
+ * @param params - API key creation parameters
+ * @param params.name - Descriptive name for the key
+ * @param params.userId - ID of the user creating the key
+ * @param params.permissions - Array of permissions to grant
+ * @param params.rateLimit - Optional rate limit (requests per hour)
+ * @param params.expiresAt - Optional expiration date
+ * 
+ * @returns Promise resolving to created API key and raw key
+ * 
+ * @throws {ValidationError} When required parameters are missing
+ * @throws {DatabaseError} When database operation fails
+ * 
+ * @example
+ * ```typescript
+ * const { apiKey, rawKey } = await createApiKey({
+ *   name: 'Content Service',
+ *   userId: 'user-123',
+ *   permissions: ['content:read', 'content:create'],
+ *   rateLimit: 5000
+ * });
+ * ```
+ */
+async function createApiKey(params: CreateApiKeyParams): Promise<CreateApiKeyResult> {
+  // Implementation
+}
+```
+
+## Performance Guidelines
+
+### Database Optimization
 
 ```typescript
 // Use connection pooling
 const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
   max: 20,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis: 2000
 });
 
-// Implement query optimization
-async findContentByTags(tags: string[]): Promise<Content[]> {
-  // Use indexed queries
-  const query = `
-    SELECT c.* FROM content c
-    JOIN content_tags ct ON c.id = ct.content_id
-    WHERE ct.tag = ANY($1)
+// Optimize queries
+async function getUsersWithContent() {
+  // Use joins instead of N+1 queries
+  return await db.query(`
+    SELECT u.*, c.title, c.created_at as content_created
+    FROM users u
+    LEFT JOIN content c ON u.id = c.author_id
+    WHERE u.is_active = true
     ORDER BY c.created_at DESC
-    LIMIT 100
-  `;
+  `);
+}
+
+// Use prepared statements
+const getUserById = db.prepare('SELECT * FROM users WHERE id = $1');
+```
+
+### Caching Strategy
+
+```typescript
+// Implement caching layers
+async function getUser(id: string): Promise<User> {
+  // Check L1 cache (memory)
+  const cached = memoryCache.get(`user:${id}`);
+  if (cached) return cached;
+
+  // Check L2 cache (Redis)
+  const redisCached = await redis.get(`user:${id}`);
+  if (redisCached) {
+    const user = JSON.parse(redisCached);
+    memoryCache.set(`user:${id}`, user, 300); // 5 minutes
+    return user;
+  }
+
+  // Fetch from database
+  const user = await userRepository.findById(id);
+  if (user) {
+    await redis.setex(`user:${id}`, 3600, JSON.stringify(user)); // 1 hour
+    memoryCache.set(`user:${id}`, user, 300);
+  }
+
+  return user;
+}
+```
+
+### Memory Management
+
+```typescript
+// Use streams for large data processing
+const processLargeDataset = async () => {
+  const stream = fs.createReadStream('large-file.json');
+  const parser = stream.pipe(new JSONParser());
   
-  return this.db.query(query, [tags]);
+  for await (const item of parser) {
+    await processItem(item);
+    // Process one item at a time to avoid memory issues
+  }
+};
+
+// Clean up resources
+class ResourceManager {
+  private resources: Array<{ close(): void }> = [];
+
+  register(resource: { close(): void }) {
+    this.resources.push(resource);
+  }
+
+  async cleanup() {
+    await Promise.all(
+      this.resources.map(resource => resource.close())
+    );
+    this.resources = [];
+  }
 }
 ```
 
-## Security
+## Deployment
 
-### Best Practices
+### Build Process
 
-#### Input Validation
+```bash
+# Production build
+npm run build
+
+# Check build output
+ls -la dist/
+
+# Test production build locally
+NODE_ENV=production node dist/index.js
+```
+
+### Environment Variables
+
+Production environment variables should be securely managed:
+
+```bash
+# Use environment variable injection
+DATABASE_URL=${DATABASE_URL}
+REDIS_URL=${REDIS_URL}
+JWT_SECRET=${JWT_SECRET}
+
+# Validate required variables
+if [ -z "$DATABASE_URL" ]; then
+  echo "ERROR: DATABASE_URL is required"
+  exit 1
+fi
+```
+
+### Health Checks
+
+Implement comprehensive health checks:
 
 ```typescript
-import Joi from 'joi';
+// Health check endpoint
+app.get('/health', async (req, res) => {
+  const checks = await Promise.allSettled([
+    checkDatabase(),
+    checkRedis(),
+    checkExternalServices()
+  ]);
 
-const createUserSchema = Joi.object({
-  email: Joi.string().email().required(),
-  name: Joi.string().min(1).max(100).required(),
-  password: Joi.string().min(8).pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/).required(),
+  const allHealthy = checks.every(
+    check => check.status === 'fulfilled' && check.value.healthy
+  );
+
+  res.status(allHealthy ? 200 : 503).json({
+    status: allHealthy ? 'healthy' : 'unhealthy',
+    checks: checks.map((check, index) => ({
+      name: ['database', 'redis', 'external'][index],
+      status: check.status === 'fulfilled' ? 'pass' : 'fail',
+      details: check.status === 'fulfilled' ? check.value : check.reason
+    }))
+  });
 });
-
-export function validateCreateUser(data: unknown): CreateUserDTO {
-  const { error, value } = createUserSchema.validate(data);
-  if (error) {
-    throw new ValidationError(error.details[0].message);
-  }
-  return value;
-}
 ```
-
-#### SQL Injection Prevention
-
-```typescript
-// Good: Parameterized queries
-const result = await this.db.query(
-  'SELECT * FROM users WHERE email = $1',
-  [email]
-);
-
-// Bad: String concatenation
-const result = await this.db.query(
-  `SELECT * FROM users WHERE email = '${email}'`
-);
-```
-
-#### Secrets Management
-
-```typescript
-// Never commit secrets to code
-const apiKey = process.env.API_KEY; // ✓ Good
-
-// Use secure defaults
-const jwtSecret = process.env.JWT_SECRET || (() => {
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error('JWT_SECRET must be set in production');
-  }
-  return 'dev-secret-not-for-production';
-})();
-```
-
-### Security Headers
-
-```typescript
-// Implemented in src/index.ts
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", 'data:', 'https:'],
-    },
-  },
-  hsts: {
-    maxAge: 31536000,
-    includeSubDomains: true,
-    preload: true,
-  },
-}));
-```
-
-## Contributing
-
-### Code Review Checklist
-
-- [ ] Code follows project conventions
-- [ ] All tests pass
-- [ ] Documentation is updated
-- [ ] Security considerations addressed
-- [ ] Performance impact considered
-- [ ] Error handling implemented
-- [ ] Logging added for debugging
-
-### Pull Request Template
-
-```markdown
-## Description
-Brief description of changes made.
-
-## Type of Change
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Breaking change
-- [ ] Documentation update
-
-## Testing
-- [ ] Unit tests added/updated
-- [ ] Integration tests added/updated
-- [ ] Manual testing completed
-
-## Checklist
-- [ ] Code follows style guidelines
-- [ ] Self-review completed
-- [ ] Documentation updated
-- [ ] Tests pass locally
-```
-
-### Release Process
-
-1. **Version Bump**
-   ```bash
-   npm version patch # or minor/major
-   ```
-
-2. **Generate Changelog**
-   ```bash
-   npm run changelog
-   ```
-
-3. **Create Release PR**
-   ```bash
-   git checkout -b release/v1.1.0
-   git push origin release/v1.1.0
-   ```
-
-4. **Deploy to Staging**
-   ```bash
-   npm run deploy:staging
-   ```
-
-5. **Deploy to Production**
-   ```bash
-   npm run deploy:production
-   ```
 
 ## Troubleshooting
 
 ### Common Issues
 
-#### Redis Connection Errors
+**Database Connection Issues:**
+```bash
+# Check PostgreSQL status
+sudo systemctl status postgresql
+
+# Check connection parameters
+psql -h localhost -p 5432 -U username -d ai_curator_dev
+
+# Reset database
+npm run migrate:down && npm run migrate:up
+```
+
+**Redis Connection Issues:**
 ```bash
 # Check Redis status
 redis-cli ping
 
-# View Redis logs
-redis-cli monitor
+# Clear Redis cache
+redis-cli flushdb
 
-# Restart Redis
-brew services restart redis
+# Check Redis configuration
+redis-cli config get "*"
 ```
 
-#### Port Already in Use
+**Build Issues:**
 ```bash
-# Find process using port 3000
-lsof -i :3000
-
-# Kill process
-kill -9 <PID>
-
-# Or use different port
-PORT=3001 npm run dev
-```
-
-#### Module Resolution Errors
-```bash
-# Clear node_modules and reinstall
+# Clear node modules and reinstall
 rm -rf node_modules package-lock.json
 npm install
 
 # Clear TypeScript cache
 npx tsc --build --clean
+
+# Check TypeScript configuration
+npx tsc --showConfig
 ```
 
-### Getting Help
+### Debug Checkers
 
-- **Documentation**: Check docs/ directory
-- **Issues**: Create GitHub issue with reproduction steps
-- **Discussions**: Use GitHub Discussions for questions
-- **Team Chat**: Internal team communication channels
+```typescript
+// Environment validation
+const requiredEnvVars = [
+  'NODE_ENV',
+  'DATABASE_URL',
+  'REDIS_URL',
+  'JWT_SECRET'
+];
 
-This development guide provides the foundation for productive development on the AI Content Curator Agent project.
+requiredEnvVars.forEach(varName => {
+  if (!process.env[varName]) {
+    throw new Error(`Required environment variable ${varName} is not set`);
+  }
+});
+
+// Service health validation
+async function validateServices() {
+  try {
+    await db.query('SELECT 1');
+    logger.info('Database connection: OK');
+  } catch (error) {
+    logger.error('Database connection: FAILED', { error });
+    throw error;
+  }
+
+  try {
+    await redis.ping();
+    logger.info('Redis connection: OK');
+  } catch (error) {
+    logger.error('Redis connection: FAILED', { error });
+    throw error;
+  }
+}
+```
+
+## Contributing
+
+### Code Review Guidelines
+
+- **Functionality**: Does the code work as intended?
+- **Tests**: Are there sufficient tests with good coverage?
+- **Performance**: Are there any performance concerns?
+- **Security**: Are there any security vulnerabilities?
+- **Documentation**: Is the code well-documented?
+- **Style**: Does the code follow project conventions?
+
+### Pull Request Process
+
+1. Create feature branch from `main`
+2. Implement changes with tests
+3. Run full test suite
+4. Update documentation if needed
+5. Submit pull request with description
+6. Address review feedback
+7. Merge after approval
+
+### Release Process
+
+1. Update version in `package.json`
+2. Update `CHANGELOG.md`
+3. Create release branch
+4. Run full test suite
+5. Create release tag
+6. Deploy to staging
+7. Deploy to production
+8. Monitor deployment

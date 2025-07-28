@@ -1,9 +1,11 @@
 /**
- * @fileoverview Users table seed data
+ * @fileoverview Users table seed data with test user profiles
+ * @lastmodified 2025-07-28T00:45:59Z
  * 
- * Creates seed data for test users with different profiles and preferences
- * 
- * @module database/seeds/users
+ * Features: Test users with varied expertise levels, interests, preferences, timezones
+ * Main APIs: seedUsers(), UserSeedData interface
+ * Constraints: Requires users table, validates unique emails when skipExisting enabled
+ * Patterns: JSON preference storage, expertise level categorization, format preferences
  */
 
 import { DatabaseConnection } from '@database/connection';

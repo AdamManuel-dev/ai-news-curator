@@ -1,11 +1,11 @@
 /**
  * @fileoverview Migration service for dependency injection integration
- *
- * Provides a service wrapper around the migration runner for integration
- * with the application's dependency injection container and lifecycle.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Service wrapper, auto-migration, validation, health checks
+ * Main APIs: MigrationService class, init(), runPendingMigrations()
+ * Constraints: Requires MigrationRunner, Pool connection
+ * Patterns: Service pattern, configurable auto-migration, factory function
  */
 
 import { Pool } from 'pg';

@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Base controller with error handling and response utilities
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Abstract BaseController, error handling, response standardization, request logging
+ * Main APIs: BaseController.handleRequest(), sendSuccess(), sendError()
+ * Constraints: Requires dependency injection container, winston logger
+ * Patterns: Template method pattern, dependency injection, structured error responses
+ */
+
 import { Request, Response } from 'express';
 import { container, LOGGER } from '@container/index';
 import { logError } from '@utils/logger';

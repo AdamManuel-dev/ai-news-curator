@@ -1,11 +1,11 @@
 /**
- * @fileoverview Advanced cache management service
+ * @fileoverview Advanced cache management service with warming and monitoring
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides high-level cache operations including warming, invalidation patterns,
- * circuit breaker functionality, and cache statistics monitoring.
- * 
- * @author AI Content Curator Team
- * @since 1.0.0
+ * Features: Cache warming, invalidation patterns, circuit breaker, statistics monitoring
+ * Main APIs: CacheManager class, warmCache(), invalidatePattern(), getStats(), healthCheck()
+ * Constraints: Requires CacheService instance, performance thresholds configurable
+ * Patterns: Circuit breaker pattern, cache warming strategies, pattern-based invalidation
  */
 
 import { CacheService } from './cache';

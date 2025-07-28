@@ -1,7 +1,11 @@
 /**
- * @fileoverview API keys seed data
+ * @fileoverview API keys seed data placeholder
+ * @lastmodified 2025-07-28T00:45:59Z
  * 
- * @module database/seeds/api-keys
+ * Features: API key seeding placeholder for authentication system
+ * Main APIs: seedApiKeys()
+ * Constraints: Skips seeding in favor of runtime API key creation
+ * Patterns: Returns empty result, defers to authentication service
  */
 
 import { DatabaseConnection } from '@database/connection';

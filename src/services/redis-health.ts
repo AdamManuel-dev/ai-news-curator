@@ -1,11 +1,11 @@
 /**
- * @fileoverview Redis health monitoring service
+ * @fileoverview Redis health monitoring service with metrics and recovery
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides comprehensive health monitoring for Redis connections including
- * connection status, performance metrics, and recovery strategies.
- * 
- * @author AI Content Curator Team
- * @since 1.0.0
+ * Features: Health checks, performance metrics, automatic recovery, continuous monitoring
+ * Main APIs: RedisHealthService class, performHealthCheck(), startMonitoring(), getMetrics()
+ * Constraints: Requires Redis adapter, configurable thresholds and intervals
+ * Patterns: Health check pattern, automatic recovery, metrics collection with history
  */
 
 import { redisAdapter } from '@adapters/redis';

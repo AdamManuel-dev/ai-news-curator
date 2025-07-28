@@ -1,5 +1,11 @@
 /**
- * @fileoverview Tests for response serialization utilities
+ * @fileoverview Tests for response serialization utilities with comprehensive formatting
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Response serialization, pagination handling, error formatting, field filtering, data transforms
+ * Main APIs: success(), paginated(), error(), validationError(), notFound(), unauthorized()
+ * Constraints: Requires Express request/response objects, serialization options, API versioning
+ * Patterns: Mock Express objects, test response formats, validate status codes and headers
  */
 
 import { Request, Response } from 'express';

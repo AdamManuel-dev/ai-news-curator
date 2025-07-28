@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Core content curator input/output types and interfaces
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Content discovery, tagging, ranking, trend analysis interfaces
+ * Main APIs: ContentCuratorInput, ContentCuratorOutput, DiscoveredContent, RankedContent
+ * Constraints: Action types limited to predefined enum values, quality scores 0-1
+ * Patterns: All interfaces use string IDs, timestamps as ISO strings, optional fields for flexibility
+ */
+
 export interface ContentCuratorInput {
   action: 'discover' | 'tag' | 'rank' | 'analyze_trends' | 'get_personalized';
   discovery?: DiscoveryOptions;

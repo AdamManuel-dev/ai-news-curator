@@ -1,8 +1,11 @@
 /**
  * @fileoverview Tests for HTTP cache middleware
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Tests response caching, ETag generation, cache headers,
- * and conditional request handling.
+ * Features: Response caching, ETag generation, cache headers, conditional requests
+ * Main APIs: cache(), etag(), headers(), invalidate()
+ * Constraints: Requires CacheService mocking
+ * Patterns: Tests Express middleware functionality with mock req/res
  */
 
 import { Request, Response, NextFunction } from 'express';

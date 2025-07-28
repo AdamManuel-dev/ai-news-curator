@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Cache service with Redis adapter integration
+ * @lastmodified 2025-07-28T01:43:24Z
+ * 
+ * Features: CRUD operations, TTL support, batch operations, cache-aside pattern
+ * Main APIs: CacheService class, get(), set(), delete(), getOrSet(), increment()
+ * Constraints: Requires Redis adapter, dependency injection container
+ * Patterns: Service pattern, cache-aside, error handling with fallbacks
+ */
+
 import { Injectable } from '@container/Container';
 import { container, REDIS_ADAPTER } from '@container/index';
 import { BaseService } from '@services/index';

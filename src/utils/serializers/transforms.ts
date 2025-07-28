@@ -1,10 +1,11 @@
 /**
  * @fileoverview Data transformation utilities for serialization
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides common data transformation functions used across serializers
- * including date formatting, URL sanitization, and field normalization.
- * 
- * @module utils/serializers/transforms
+ * Features: Date formatting, URL sanitization, key case conversion, text truncation, computed fields
+ * Main APIs: DataTransforms class, formatDate(), sanitizeUrl(), toCamelCase(), removeNulls()
+ * Constraints: Timezone support limited, URL protocol restrictions, locale dependencies
+ * Patterns: Static utility class, pure functions, pipeline transformations, error-safe operations
  */
 
 /**

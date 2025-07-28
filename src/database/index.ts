@@ -1,11 +1,11 @@
 /**
  * @fileoverview Database module exports and initialization
- *
- * Central module for database connections, repositories, and services.
- * Provides a clean interface for dependency injection and application setup.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Database connections, repositories, migrations, services
+ * Main APIs: getDatabase(), DatabaseService, migration system exports
+ * Constraints: Requires PostgreSQL connection, config module
+ * Patterns: Central export module, dependency injection ready
  */
 
 export * from './connection';

@@ -1,7 +1,11 @@
 #!/bin/bash
-
-# AI Content Curator - Unified Deployment Script
-# This script provides a simple interface for deploying to AWS or Azure
+# @fileoverview Unified cloud deployment orchestrator for multi-platform deployment
+# @lastmodified 2025-07-28T00:59:55Z
+# 
+# Features: AWS/Azure deployment, interactive menu, prerequisite checks, status monitoring
+# Main APIs: deploy_aws_eks(), deploy_aws_ecs(), deploy_azure_aks(), deploy_azure_aci()
+# Constraints: Requires cloud CLIs (aws/az), Docker, kubectl, helm
+# Patterns: Interactive menus, colored output, prerequisite validation
 
 set -e
 

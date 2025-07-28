@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Request throttling service for respectful web scraping
+ * @lastmodified 2025-07-28T00:55:47Z
+ * 
+ * Features: Domain-based rate limiting, request queuing, custom delays, stats tracking
+ * Main APIs: RequestThrottle class, waitForTurn(), setCustomDelay(), getThrottleStats()
+ * Constraints: 60 requests/minute per domain, 1s default delay, memory-only storage
+ * Patterns: Per-domain queuing, exponential backoff, in-memory state management
+ */
+
 import { injectable, inject } from 'inversify';
 import { Logger } from 'winston';
 import { TOKENS } from '../../container/tokens';

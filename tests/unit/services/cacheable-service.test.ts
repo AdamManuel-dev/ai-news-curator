@@ -1,8 +1,11 @@
 /**
  * @fileoverview Tests for CacheableService
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Tests caching functionality, cache invalidation, warmup,
- * and fallback behavior when cache is unavailable.
+ * Features: Cache functionality, invalidation, warmup, fallback behavior
+ * Main APIs: getOrSetCache(), setCache(), invalidateCache(), warmupCache()
+ * Constraints: Requires CacheManager and CacheService mocking
+ * Patterns: Tests cache-aside pattern, service lifecycle, error handling
  */
 
 import { CacheableService } from '@services/base/CacheableService';

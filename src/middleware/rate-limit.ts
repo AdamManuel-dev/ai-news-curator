@@ -1,10 +1,11 @@
 /**
- * @fileoverview Rate limiting middleware for API protection.
+ * @fileoverview Rate limiting middleware for API protection
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides flexible rate limiting with Redis storage, user-based and IP-based
- * limits, API key support, and comprehensive monitoring.
- * 
- * @module middleware/rate-limit
+ * Features: Redis-backed rate limiting, tiered limits, dynamic limits, API key integration
+ * Main APIs: createRateLimiter(), dynamicRateLimit(), various preset limiters
+ * Constraints: Requires Redis, express-rate-limit, API key service, metrics
+ * Patterns: Middleware factory, tier-based limits, custom key generation, skip conditions
  */
 
 import rateLimit, { RateLimitRequestHandler, Options } from 'express-rate-limit';

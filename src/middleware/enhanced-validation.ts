@@ -1,8 +1,11 @@
 /**
  * @fileoverview Enhanced validation middleware with Zod schemas
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides comprehensive request/response validation using Zod schemas
- * with TypeScript integration, performance optimization, and detailed error reporting.
+ * Features: Zod validation, request/response validation, caching, sanitization, type coercion
+ * Main APIs: ValidationMiddleware.validate(), validateResponse(), validate.body/params/query()
+ * Constraints: Requires Zod schemas, global schema registry, validation types
+ * Patterns: Middleware factory, result caching, async validation, error aggregation
  */
 
 import { Request, Response, NextFunction } from 'express';

@@ -1,5 +1,11 @@
 /**
- * @fileoverview Tests for content-specific serializers
+ * @fileoverview Tests for content-specific serializers with multiple output formats
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Content serialization, author/source/tag serialization, search/recommendation formats
+ * Main APIs: ContentSerializer.forItem(), forList(), forSearch(), AuthorSerializer, SourceSerializer
+ * Constraints: Requires test data objects, serialization options, relation handling
+ * Patterns: Test multiple output formats, validate field filtering, test relation inclusion
  */
 
 import {

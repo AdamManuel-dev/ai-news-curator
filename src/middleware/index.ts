@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Middleware exports and types
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Middleware aggregation, type definitions, request extensions
+ * Main APIs: AuthenticatedRequest interface, middleware re-exports
+ * Constraints: None, pure module aggregation
+ * Patterns: Barrel export pattern, interface extension
+ */
+
 export interface AuthenticatedRequest extends Request {
   user?: {
     id: string;

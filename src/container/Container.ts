@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Core dependency injection container with service registration
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Singleton/transient registration, factory functions, decorators
+ * Main APIs: registerSingleton(), registerTransient(), resolve(), Service, Injectable
+ * Constraints: Requires reflect-metadata, singleton pattern for global access
+ * Patterns: All throw Error on missing services, supports recursive dependency resolution
+ */
+
 import 'reflect-metadata';
 
 // Type for constructor functions

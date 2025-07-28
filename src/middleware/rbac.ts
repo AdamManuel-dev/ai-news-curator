@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Role-based access control (RBAC) middleware
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Permission checks, role validation, multi-permission support, resource protection
+ * Main APIs: requirePermission(), requireRole(), requireAnyPermission(), requireAllPermissions()
+ * Constraints: Requires authenticated user, RBAC service, dependency injection container
+ * Patterns: Middleware factories, permission cascading, resource-based permissions
+ */
+
 import { Request, Response, NextFunction } from 'express';
 import { container } from '../container/setup';
 import { TOKENS } from '../container/tokens';

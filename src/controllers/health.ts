@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Health check controller for system monitoring and diagnostics
+ * @lastmodified 2025-07-28T01:43:24Z
+ * 
+ * Features: Redis health, vector DB health, memory monitoring, disk checks, dependency status
+ * Main APIs: HealthController class, getHealthStatus(), getDetailedHealthStatus()
+ * Constraints: Requires Redis, Pinecone vector DB, EnhancedBaseController
+ * Patterns: Dependency injection, comprehensive health checks, status aggregation
+ */
+
 import { Request, Response } from 'express';
 import { Injectable } from '@container/Container';
 import { EnhancedBaseController } from '@controllers/enhanced-base';

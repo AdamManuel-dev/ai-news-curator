@@ -1,5 +1,11 @@
 /**
- * @fileoverview Tests for Pinecone vector database service
+ * @fileoverview Tests for Pinecone vector database service with comprehensive vector operations
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Vector upsert/search/delete, connection management, batch operations, health checks
+ * Main APIs: upsertVector(), searchVectors(), deleteVectors(), connect(), healthCheck()
+ * Constraints: Requires Pinecone client mock, API key configuration, metrics collection
+ * Patterns: Mock Pinecone SDK, test vector operations, validate error handling
  */
 
 import { PineconeService, ContentVector, VectorSearchOptions } from '../pinecone';

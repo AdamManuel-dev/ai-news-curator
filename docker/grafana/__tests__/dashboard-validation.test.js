@@ -1,12 +1,11 @@
 /**
- * @fileoverview Tests to validate Grafana dashboard JSON files
+ * @fileoverview Comprehensive Grafana dashboard JSON validation test suite
+ * @lastmodified 2025-07-28T01:01:09Z
  * 
- * This test suite validates:
- * - JSON syntax and structure
- * - Required dashboard properties
- * - Panel configurations
- * - Data source references
- * - Query syntax validation
+ * Features: JSON structure validation, panel configuration checks, Prometheus query validation, accessibility testing
+ * Main APIs: Dashboard file existence tests, metadata validation, query syntax checks, UX compliance
+ * Constraints: Requires Jest, dashboard JSON files in ../dashboards/, specific AI Curator metrics
+ * Patterns: Parameterized tests with test.each(), comprehensive property validation, custom metric verification
  */
 
 const fs = require('fs');

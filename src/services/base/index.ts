@@ -1,8 +1,11 @@
 /**
  * @fileoverview Base service and repository classes
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Exports all enhanced base classes for building robust, scalable services
- * and repositories with built-in caching, auditing, events, and monitoring.
+ * Features: Service/repository base classes, type exports, enhanced functionality
+ * Main APIs: CacheableService, DatabaseService, EventEmittingService, BaseRepository
+ * Constraints: None
+ * Patterns: Barrel exports, type re-exports, service composition
  */
 
 // Service base classes

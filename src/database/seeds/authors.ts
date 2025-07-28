@@ -1,13 +1,11 @@
 /**
- * @fileoverview Authors table seed data
+ * @fileoverview Authors table seed data with tech industry professionals
+ * @lastmodified 2025-07-28T00:45:59Z
  * 
- * Creates seed data for content authors including:
- * - Tech industry thought leaders
- * - Academic researchers
- * - Open source contributors
- * - Developer advocates
- * 
- * @module database/seeds/authors
+ * Features: Tech leaders, academics, OSS contributors, developer advocates with profiles
+ * Main APIs: seedAuthors(), AuthorSeedData interface
+ * Constraints: Requires authors table, validates unique names when skipExisting enabled
+ * Patterns: Batch processing, social profile JSON storage, reputation scoring
  */
 
 import { DatabaseConnection } from '@database/connection';

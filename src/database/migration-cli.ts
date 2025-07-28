@@ -2,12 +2,12 @@
 
 /**
  * @fileoverview Command-line interface for database migrations
- *
- * Provides easy-to-use commands for running, rolling back, and managing
- * database migrations from the command line or npm scripts.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Migration commands, status checking, file creation, validation
+ * Main APIs: createCLI(), up/down/status/validate/create commands
+ * Constraints: Requires database config, migration files directory
+ * Patterns: Commander.js CLI, dry-run support, colored output
  */
 
 import { Command } from 'commander';

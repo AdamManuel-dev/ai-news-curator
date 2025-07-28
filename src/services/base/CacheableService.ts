@@ -1,8 +1,11 @@
 /**
  * @fileoverview Cacheable service base class
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Extends BaseService with built-in caching capabilities using the cache manager.
- * Provides cache-aside pattern implementation and cache invalidation helpers.
+ * Features: Cache-aside pattern, cache invalidation, warmup, statistics
+ * Main APIs: getOrSetCache(), setCache(), invalidateCache(), warmupCache()
+ * Constraints: Requires CacheService, configurable TTL, key prefixing
+ * Patterns: Extends BaseService, graceful cache degradation, metrics tracking
  */
 
 import { BaseService } from '@services/index';

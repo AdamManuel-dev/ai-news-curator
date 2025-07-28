@@ -1,5 +1,11 @@
 /**
- * @fileoverview Tests for Prometheus metrics middleware
+ * @fileoverview Tests for Prometheus metrics middleware with comprehensive metric collection
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: HTTP metrics tracking, business metrics recording, health monitoring, route normalization
+ * Main APIs: metricsMiddleware, recordContentDiscovery(), updateSystemHealth(), normalizeRoute()
+ * Constraints: Requires Express app setup, Prometheus client, supertest for HTTP testing
+ * Patterns: Mock Express requests, test metric export formats, validate Prometheus format
  */
 
 import request from 'supertest';

@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Tests for RBAC service with comprehensive permission and role management
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Permission checking, role assignment, user authorization, expired assignment cleanup
+ * Main APIs: getUserPermissions(), hasPermission(), assignRole(), grantPermission(), cleanupExpiredAssignments()
+ * Constraints: Requires PostgreSQL pool connection, transaction management, logger dependency
+ * Patterns: Mock database client, test role hierarchies, validate transaction rollbacks
+ */
+
 import { Pool } from 'pg';
 import { RBACService } from '../rbac';
 import { Logger } from 'winston';

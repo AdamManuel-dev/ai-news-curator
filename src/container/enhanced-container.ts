@@ -1,11 +1,11 @@
 /**
  * @fileoverview Enhanced dependency injection container with lifecycle management
- *
- * Provides advanced features like circular dependency detection, lifecycle hooks,
- * scoped instances, and container introspection for better debugging.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Circular dependency detection, lifecycle hooks, scoped instances, metrics
+ * Main APIs: registerSingleton(), resolve(), createScope(), validate(), dispose()
+ * Constraints: Requires reflect-metadata, async factories not supported in sync resolution
+ * Patterns: All throw Error on circular dependencies, configurable lifecycle logging
  */
 
 import 'reflect-metadata';

@@ -1,13 +1,11 @@
 /**
- * @fileoverview Sources table seed data
+ * @fileoverview Sources table seed data with comprehensive content feeds
+ * @lastmodified 2025-07-28T00:45:59Z
  * 
- * Creates seed data for content sources including:
- * - RSS feeds from major tech publications
- * - API endpoints for academic papers
- * - Web scrapers for specific sites
- * - Social media monitors
- * 
- * @module database/seeds/sources
+ * Features: RSS feeds, API endpoints, web scrapers, social monitors with configurations
+ * Main APIs: seedSources(), SourceSeedData interface
+ * Constraints: Requires sources table, validates unique names when skipExisting enabled
+ * Patterns: JSON configuration storage, reputation scoring, frequency scheduling
  */
 
 import { DatabaseConnection } from '@database/connection';

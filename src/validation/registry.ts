@@ -1,8 +1,11 @@
 /**
  * @fileoverview Schema registry for validation schemas
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides centralized management of validation schemas with caching,
- * performance tracking, and composition capabilities.
+ * Features: Schema registration, caching, composition, metrics tracking, cleanup
+ * Main APIs: ValidationSchemaRegistry, globalSchemaRegistry, schemaRegistry helpers
+ * Constraints: Memory usage for cached schemas, Zod dependency, schema compilation time
+ * Patterns: Registry pattern, singleton instance, performance monitoring, async validation
  */
 
 import { z } from 'zod';

@@ -1,11 +1,11 @@
 /**
  * @fileoverview Base repository class with common database operations
- *
- * Provides a foundation for all repository classes with standard CRUD operations,
- * query building, and transaction support.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: CRUD operations, pagination, transactions, query building
+ * Main APIs: BaseRepository abstract class, findById(), create(), update()
+ * Constraints: Requires DatabaseConnection, BaseEntity interface
+ * Patterns: Abstract base class, camelCase/snake_case conversion, SQL injection protection
  */
 
 import { QueryResult, PoolClient } from 'pg';

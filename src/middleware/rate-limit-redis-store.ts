@@ -1,10 +1,11 @@
 /**
- * @fileoverview Redis store implementation for express-rate-limit.
+ * @fileoverview Redis store implementation for express-rate-limit
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides distributed rate limiting across multiple server instances
- * using Redis as the backing store.
- * 
- * @module middleware/rate-limit-redis-store
+ * Features: Distributed rate limiting, Redis pipeline operations, atomic increment/decrement
+ * Main APIs: RedisStore class with increment(), decrement(), resetKey(), resetAll()
+ * Constraints: Requires RedisAdapter, express-rate-limit Store interface
+ * Patterns: Store pattern, pipeline operations, TTL management, error fallback
  */
 
 import { Store, Options, IncrementResponse } from 'express-rate-limit';

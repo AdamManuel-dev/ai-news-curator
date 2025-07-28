@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Service tokens for dependency injection container identification
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Symbol-based service tokens, grouped by domain, individual exports
+ * Main APIs: TOKENS object, individual token exports
+ * Constraints: Tokens are symbols for type safety and uniqueness
+ * Patterns: Grouped by service domain, const assertion for immutability
+ */
+
 // Service tokens for dependency injection
 // These tokens are used to identify services in the DI container
 

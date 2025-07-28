@@ -1,8 +1,11 @@
 /**
  * @fileoverview Tests for enhanced BaseService
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Tests lifecycle management, health checks, error handling,
- * metrics, circuit breaker, retry logic, and validation.
+ * Features: Lifecycle management, health checks, retry logic, circuit breaker
+ * Main APIs: initialize(), healthCheck(), withRetry(), withTimeout()
+ * Constraints: Requires logger and container mocking
+ * Patterns: Tests service patterns, timeout handling, configuration management
  */
 
 import { BaseService } from '@services/index';

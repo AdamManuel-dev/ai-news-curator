@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Unit tests for utility functions
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: URL validation, string sanitization, sleep utilities
+ * Main APIs: sleep(), isValidUrl(), sanitizeString()
+ * Constraints: None
+ * Patterns: Standard Jest test patterns with describe/it blocks
+ */
+
 // Basic unit tests for utilities
 import { sleep, isValidUrl, sanitizeString } from '../../src/utils/index';
 

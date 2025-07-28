@@ -1,5 +1,11 @@
 /**
- * @fileoverview Tests for EnhancedBaseController
+ * @fileoverview Tests for EnhancedBaseController with comprehensive request handling scenarios
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: CRUD operations testing, pagination testing, error handling validation, data transformations
+ * Main APIs: handleRequest(), handlePaginatedRequest(), handleCreate(), handleUpdate(), handleDelete()
+ * Constraints: Requires Express mocks, container dependency injection, Jest testing framework
+ * Patterns: Mock Express objects, test error status codes, validate response formats
  */
 
 import { Request, Response, NextFunction } from 'express';

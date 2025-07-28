@@ -1,5 +1,6 @@
 /**
  * @fileoverview Express application entry point for AI content curator
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
  * Features: Security headers, CORS, rate limiting, auth, metrics, health checks
  * Main APIs: startServer(), /health, /auth, /api-keys, /roles, /metrics

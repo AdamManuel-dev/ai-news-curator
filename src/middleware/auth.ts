@@ -1,10 +1,11 @@
 /**
- * @fileoverview Authentication middleware for JWT token validation.
+ * @fileoverview Authentication middleware for JWT token validation
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides middleware functions for protecting routes with JWT authentication,
- * API key validation, and role-based access control.
- * 
- * @module middleware/auth
+ * Features: JWT auth, API key validation, role-based access, optional auth, HTTPS enforcement
+ * Main APIs: authenticateJWT(), authenticateAPIKey(), requireRole(), devAuthBypass()
+ * Constraints: Requires JWT_SECRET, container DI, OAuth/API key services
+ * Patterns: All throw 401/403 errors, user context injection, token extraction
  */
 
 import { Request, Response, NextFunction } from 'express';

@@ -1,11 +1,11 @@
 /**
  * @fileoverview Database service for dependency injection
- *
- * Provides a service layer over database repositories and connections
- * for easy integration with the dependency injection container.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Service layer, repository access, health checks, statistics
+ * Main APIs: DatabaseService class, initialize(), getContentRepository()
+ * Constraints: Requires DatabaseConnection, ContentRepository
+ * Patterns: Injectable service, extends BaseService, graceful shutdown
  */
 
 import { Injectable } from '@container/Container';

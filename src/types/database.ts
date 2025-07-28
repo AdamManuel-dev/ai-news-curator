@@ -1,11 +1,11 @@
 /**
- * @fileoverview Database entity types and interfaces for the AI Content Curator Agent.
- *
- * These types mirror the PostgreSQL schema and provide type safety for database operations.
- * All entities include proper timestamps and relationships as defined in the database schema.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * @fileoverview Database entity types and interfaces for the AI Content Curator Agent
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: PostgreSQL schema types, entity enums, relationships, CRUD input types
+ * Main APIs: Content, Author, Source, Tag entities, Create/Update input types
+ * Constraints: Requires PostgreSQL, UUID IDs, proper enum values, foreign key relationships
+ * Patterns: BaseEntity inheritance, enum typing, optional fields for updates, relation interfaces
  */
 
 // Enum types matching PostgreSQL enums

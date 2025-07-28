@@ -1,10 +1,11 @@
 /**
  * @fileoverview Enhanced BaseController with response serialization
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Extends the original BaseController with comprehensive response serialization,
- * data transformation, and API response standardization capabilities.
- * 
- * @module controllers/enhanced-base
+ * Features: Response serialization, data transforms, pagination, CRUD operations, caching
+ * Main APIs: EnhancedBaseController, handleRequest(), handlePaginatedRequest(), handleCreate()
+ * Constraints: Requires ResponseSerializer, DataTransforms, Express middleware support
+ * Patterns: Template method, middleware composition, comprehensive error mapping
  */
 
 import { Request, Response, NextFunction } from 'express';

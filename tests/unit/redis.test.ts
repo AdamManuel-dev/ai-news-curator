@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Unit tests for Redis adapter
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Connection management, interface validation, error handling
+ * Main APIs: connect(), disconnect(), get(), set(), delete()
+ * Constraints: Handles Redis unavailability gracefully
+ * Patterns: Tests both success and failure scenarios
+ */
+
 import { RedisAdapter } from '@adapters/redis';
 
 describe('RedisAdapter', () => {

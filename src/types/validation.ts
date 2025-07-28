@@ -1,8 +1,11 @@
 /**
  * @fileoverview Validation types and interfaces
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Defines comprehensive types for request/response validation using Zod schemas
- * with TypeScript integration and Express.js middleware support.
+ * Features: Zod schema validation, Express middleware, request/response validation, error handling
+ * Main APIs: ValidationSchema, RequestValidationConfig, ValidationResult, SchemaRegistry
+ * Constraints: Requires Zod library, Express framework, TypeScript inference support
+ * Patterns: Schema composition, middleware factory, error standardization, type inference
  */
 
 import { z } from 'zod';

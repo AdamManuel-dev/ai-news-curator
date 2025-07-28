@@ -1,10 +1,11 @@
 /**
- * @fileoverview API key management routes.
+ * @fileoverview API key management routes for authentication
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides endpoints for creating, managing, and monitoring API keys
- * for service-to-service authentication.
- * 
- * @module routes/api-keys
+ * Features: Create, list, update, revoke, test, rotate API keys, usage analytics
+ * Main APIs: GET/POST /api-keys, PATCH/DELETE /:keyId, GET /:keyId/usage, POST /:keyId/rotate
+ * Constraints: Requires JWT auth, rate limiting, permissions validation
+ * Patterns: Sanitized responses, structured error handling, audit logging
  */
 
 import { Router, Request, Response } from 'express';

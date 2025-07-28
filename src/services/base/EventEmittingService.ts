@@ -1,8 +1,11 @@
 /**
  * @fileoverview Event-emitting service base class
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Extends BaseService with event-driven capabilities for service communication,
- * domain events, and integration patterns.
+ * Features: Event emission/subscription, domain events, event history, retry logic
+ * Main APIs: emit(), emitDomainEvent(), on(), waitForEvent(), getEventStats()
+ * Constraints: EventEmitter limits, TTL cleanup, max 100 events per type
+ * Patterns: Extends BaseService, async events, exponential backoff, correlation IDs
  */
 
 import { EventEmitter } from 'events';

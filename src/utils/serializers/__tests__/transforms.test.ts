@@ -1,5 +1,11 @@
 /**
- * @fileoverview Tests for data transformation utilities
+ * @fileoverview Tests for data transformation utilities with comprehensive data processing
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Date transformations, URL sanitization, null removal, case conversions, text truncation
+ * Main APIs: transformDates(), sanitizeUrls(), removeNulls(), toCamelCase(), truncateText()
+ * Constraints: Requires date parsing, URL validation, deep object traversal capabilities
+ * Patterns: Test data mutations, validate transformations, handle edge cases and errors
  */
 
 import { DataTransforms } from '../transforms';

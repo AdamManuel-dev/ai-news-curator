@@ -1,9 +1,11 @@
 /**
- * @fileoverview Rate limit information routes.
+ * @fileoverview Rate limit status information routes
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides endpoints for checking rate limit status and configuration.
- * 
- * @module routes/rate-limit
+ * Features: Current rate limit status for users
+ * Main APIs: GET /rate-limit/status
+ * Constraints: Optional JWT auth, depends on rate-limit middleware
+ * Patterns: Uses middleware function for consistent rate limit info format
  */
 
 import { Router } from 'express';

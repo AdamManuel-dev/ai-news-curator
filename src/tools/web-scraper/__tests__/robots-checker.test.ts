@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Tests for RobotsChecker with robots.txt compliance validation
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Robots.txt parsing, access permission checking, cache management, user agent handling
+ * Main APIs: checkRobotsTxt(), clearCache(), getCacheStats(), robots.txt parsing
+ * Constraints: Requires axios for HTTP requests, logger dependency, URL parsing capabilities
+ * Patterns: Mock HTTP requests, test caching behavior, validate robots.txt rules
+ */
+
 import { RobotsChecker } from '../robots-checker';
 import { Logger } from 'winston';
 import axios from 'axios';

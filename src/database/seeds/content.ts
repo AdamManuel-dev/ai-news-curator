@@ -1,9 +1,11 @@
 /**
- * @fileoverview Content table seed data
+ * @fileoverview Content table seed data placeholder for discovery system
+ * @lastmodified 2025-07-28T00:45:59Z
  * 
- * Creates sample content for testing and development
- * 
- * @module database/seeds/content
+ * Features: Content seeding placeholder for testing and development
+ * Main APIs: seedContent()
+ * Constraints: Requires authors and sources tables, defers to content discovery
+ * Patterns: Returns empty result, delegates to content discovery system
  */
 
 import { DatabaseConnection } from '@database/connection';

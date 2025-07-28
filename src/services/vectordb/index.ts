@@ -1,12 +1,11 @@
 /**
- * @fileoverview Vector database services index
+ * @fileoverview Vector database services index and main exports
+ * @lastmodified 2025-07-28T00:55:47Z
  * 
- * Central export point for all vector database services including:
- * - Pinecone service for semantic search
- * - Vector operation interfaces and types
- * - Service abstractions for different vector DB providers
- * 
- * @module services/vectordb
+ * Features: Centralized exports, service abstractions, type definitions
+ * Main APIs: vectorDbService (Pinecone), ContentVector, VectorSearchOptions
+ * Constraints: Requires Pinecone configuration, single provider implementation
+ * Patterns: Facade pattern, re-export strategy, default service selection
  */
 
 export * from './pinecone';

@@ -1,5 +1,11 @@
 /**
  * @fileoverview Basic tests for database seeding system
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: DatabaseSeeder instance creation, environment configuration, batch size handling
+ * Main APIs: DatabaseSeeder constructor, configuration validation
+ * Constraints: Requires mock database connection, Jest testing framework
+ * Patterns: Mock database queries, test different environment configurations
  */
 
 import { DatabaseSeeder, SeedConfig } from '../index';

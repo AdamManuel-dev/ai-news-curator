@@ -1,5 +1,6 @@
 /**
  * @fileoverview Application configuration management with environment variable loading
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
  * Features: Server config, API keys, database, Redis, rate limiting, JWT, OAuth, caching
  * Main APIs: config object, AppConfig interface

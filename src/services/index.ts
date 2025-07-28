@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Base service class with lifecycle management and operational patterns
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Service lifecycle, health checks, circuit breaker, retry patterns, metrics
+ * Main APIs: BaseService class, initialize(), shutdown(), healthCheck(), withRetry()
+ * Constraints: Requires logger and config container resolution, DI pattern
+ * Patterns: Template method, service lifecycle, circuit breaker with exponential backoff
+ */
+
 import { logError } from '@utils/logger';
 import { container, LOGGER, CONFIG } from '@container/index';
 import type { AppConfig } from '@config/index';

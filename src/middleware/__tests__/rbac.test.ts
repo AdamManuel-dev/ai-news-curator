@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Tests for RBAC middleware with role and permission validation
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Permission checking, role validation, multiple permission requirements, user permission loading
+ * Main APIs: requirePermission(), requireRole(), requireAnyPermission(), requireAllPermissions()
+ * Constraints: Requires RBAC service mock, container dependency injection, Express request mocking
+ * Patterns: Mock RBAC service calls, test permission validation, validate error responses
+ */
+
 import { Request, Response, NextFunction } from 'express';
 import { container } from '../../container/setup';
 import { TOKENS } from '../../container/tokens';

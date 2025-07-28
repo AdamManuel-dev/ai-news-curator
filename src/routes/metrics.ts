@@ -1,10 +1,11 @@
 /**
- * @fileoverview Metrics endpoint for Prometheus scraping.
+ * @fileoverview Prometheus metrics endpoint for monitoring
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Exposes application metrics in Prometheus format at /metrics endpoint.
- * This endpoint should be protected in production environments.
- * 
- * @module routes/metrics
+ * Features: Prometheus format metrics, metrics health check
+ * Main APIs: GET /metrics, GET /metrics/health
+ * Constraints: Should be protected in production, IP whitelist recommended
+ * Patterns: Prometheus exposition format, access logging in production
  */
 
 import { Router, Request, Response } from 'express';

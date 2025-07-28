@@ -1,8 +1,11 @@
 /**
  * @fileoverview Common validation schemas and patterns
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides reusable Zod schemas for common data types, patterns,
- * and API request/response structures.
+ * Features: Reusable Zod schemas, validation patterns, schema builders, composition utilities
+ * Main APIs: basicSchemas, paginationSchemas, requestSchemas, responseSchemas, schemaBuilder
+ * Constraints: Zod library dependency, predefined patterns, regex validation limits
+ * Patterns: Schema composition, factory functions, utility helpers, type inference
  */
 
 import { z } from 'zod';

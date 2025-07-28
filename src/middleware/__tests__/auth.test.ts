@@ -1,5 +1,11 @@
 /**
- * @fileoverview Unit tests for authentication middleware
+ * @fileoverview Unit tests for authentication middleware with JWT and API key validation
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: JWT authentication, optional JWT auth, API key validation, role-based access control
+ * Main APIs: authenticateJWT(), optionalAuthenticateJWT(), authenticateAPIKey(), requireRole()
+ * Constraints: Requires OAuth service mock, container dependency injection, Express mocks
+ * Patterns: Mock middleware functions, test auth headers, validate error responses
  */
 
 import { Response, NextFunction } from 'express';

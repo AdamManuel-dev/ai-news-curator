@@ -1,10 +1,11 @@
 /**
- * @fileoverview Authentication routes for OAuth 2.0 flows.
+ * @fileoverview OAuth 2.0 authentication routes and session management
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Provides endpoints for OAuth authentication, token refresh,
- * and user session management.
- * 
- * @module routes/auth
+ * Features: OAuth flows, token refresh, user profile, logout, auth status
+ * Main APIs: GET /auth/:provider, GET /callback/:provider, POST /token/refresh, GET /me
+ * Constraints: Requires OAuth providers config, secure cookies in production
+ * Patterns: State CSRF protection, HTTP-only cookies, redirect handling, structured errors
  */
 
 import { Router, Request, Response } from 'express';

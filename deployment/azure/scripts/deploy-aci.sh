@@ -1,7 +1,11 @@
 #!/bin/bash
-
-# AI Content Curator - Azure Container Instances Deployment Script
-# This script deploys the application to Azure Container Instances
+# @fileoverview Azure Container Instances deployment with managed services
+# @lastmodified 2025-07-28T00:59:55Z
+# 
+# Features: ACI containers, PostgreSQL database, Redis cache, file storage, monitoring
+# Main APIs: deploy_container_group(), create_postgres_database(), create_redis_cache()
+# Constraints: Requires Azure CLI, Docker, jq, active Azure subscription
+# Patterns: YAML-based container definitions, health probes, persistent volumes
 
 set -e
 

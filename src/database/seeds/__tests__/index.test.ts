@@ -1,5 +1,11 @@
 /**
- * @fileoverview Tests for database seeding system
+ * @fileoverview Tests for database seeding system with comprehensive seed orchestration
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: Full seed execution testing, individual seed running, seed clearing, error handling
+ * Main APIs: runAllSeeds(), runSeed(), clearAllSeeds(), environment validation
+ * Constraints: Requires mock database connection, individual seed modules, Jest framework
+ * Patterns: Mock all seed functions, test execution order, validate error scenarios
  */
 
 import { DatabaseSeeder, SeedConfig } from '../index';

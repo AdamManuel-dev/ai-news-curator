@@ -1,10 +1,11 @@
 /**
- * @fileoverview Database seeding orchestrator
+ * @fileoverview Database seeding orchestrator with dependency management
+ * @lastmodified 2025-07-28T00:45:59Z
  * 
- * Manages the execution of all seed files in proper dependency order.
- * Provides utilities for running seeds in development, testing, and production environments.
- * 
- * @module database/seeds
+ * Features: Orchestrates seed execution, dependency ordering, batch processing, error handling
+ * Main APIs: DatabaseSeeder.runAllSeeds(), runSeed(), clearAllSeeds()
+ * Constraints: Requires database connection, respects environment restrictions
+ * Patterns: Throws on critical seed failures, logs detailed progress, uses configuration objects
  */
 
 import { DatabaseConnection } from '@database/connection';

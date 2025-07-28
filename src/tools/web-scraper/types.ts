@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Web scraper type definitions and interfaces
+ * @lastmodified 2025-07-28T00:55:47Z
+ * 
+ * Features: Content models, scraper configuration, result types, site parsers
+ * Main APIs: ScrapedContent, ScraperConfig, ScrapingResult, SiteParser interfaces
+ * Constraints: Requires URL validation, metadata tracking, error categorization
+ * Patterns: Interface segregation, configuration objects, result discriminated unions
+ */
+
 export interface ScrapedContent {
   url: string;
   title: string;

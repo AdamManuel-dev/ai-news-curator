@@ -1,11 +1,11 @@
 /**
  * @fileoverview Error handling middleware exports
+ * @lastmodified 2025-07-28T00:42:00Z
  *
- * Central module for error handling functionality including custom error types,
- * error factories, and Express middleware for comprehensive error management.
- *
- * @author AI Content Curator Team
- * @since 1.0.0
+ * Features: Error type exports, middleware exports, convenience re-exports
+ * Main APIs: All error classes, ErrorFactory, errorHandler, asyncHandler
+ * Constraints: None, pure module aggregation
+ * Patterns: Barrel export pattern, error type aggregation
  */
 
 // Error types

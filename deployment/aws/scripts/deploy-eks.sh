@@ -1,7 +1,11 @@
 #!/bin/bash
-
-# AI Content Curator - AWS EKS Deployment Script
-# This script deploys the application to Amazon EKS
+# @fileoverview AWS EKS deployment with auto-scaling and load balancing
+# @lastmodified 2025-07-28T00:59:55Z
+# 
+# Features: EKS cluster creation, ECR registry, ALB controller, Kustomize deployment
+# Main APIs: create_eks_cluster(), build_and_push_image(), deploy_application()
+# Constraints: Requires AWS CLI, eksctl, kubectl, helm, Docker
+# Patterns: Resource existence checks, wait conditions, cleanup on failure
 
 set -e
 

@@ -1,5 +1,11 @@
 /**
- * @fileoverview Unit tests for OAuth service
+ * @fileoverview Unit tests for OAuth service with multi-provider authentication
+ * @lastmodified 2025-07-28T00:42:00Z
+ * 
+ * Features: OAuth URL generation, token exchange, user authentication, JWT token management
+ * Main APIs: generateAuthUrl(), exchangeCodeForToken(), authenticateUser(), verifyAccessToken()
+ * Constraints: Requires database connection, OAuth provider configs, JWT secrets, fetch API
+ * Patterns: Mock HTTP requests, test multiple providers, validate token handling
  */
 
 import { OAuthService } from '../oauth';

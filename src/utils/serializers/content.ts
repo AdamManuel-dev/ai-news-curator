@@ -1,10 +1,11 @@
 /**
  * @fileoverview Content-specific serializers
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Serializers for content-related entities including articles, authors, sources, and tags.
- * Provides consistent data transformation and field filtering for content APIs.
- * 
- * @module utils/serializers/content
+ * Features: Content/Author/Source/Tag serialization, search highlighting, recommendations, hierarchy
+ * Main APIs: ContentSerializer, AuthorSerializer, SourceSerializer, TagSerializer
+ * Constraints: Fixed entity structures, highlighting logic limitations, hierarchy depth
+ * Patterns: Static methods, format variants, relation inclusion, performance-optimized filtering
  */
 
 import { SerializationOptions } from './index';

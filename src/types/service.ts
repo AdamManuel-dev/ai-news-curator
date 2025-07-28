@@ -1,8 +1,11 @@
 /**
  * @fileoverview Service base types and interfaces
+ * @lastmodified 2025-07-28T00:42:00Z
  * 
- * Defines common interfaces and types for service layer architecture
- * including health checks, lifecycle management, and monitoring.
+ * Features: Service lifecycle, health checks, metrics, circuit breaker patterns
+ * Main APIs: ServiceLifecycle, HealthCheckResult, ServiceMetrics, ServiceConfiguration
+ * Constraints: Health check timeouts, circuit breaker thresholds, metrics collection
+ * Patterns: Interface-based design, async operations, error handling, monitoring support
  */
 
 // Health check result interface

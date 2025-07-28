@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Centralized logging utility with Winston integration
+ * @lastmodified 2025-07-28T01:43:24Z
+ * 
+ * Features: Structured logging, multiple transports, environment-specific formats, helper functions
+ * Main APIs: logger instance, logRequestStart(), logRequestEnd(), logError(), logApiCall()
+ * Constraints: Requires Winston, config for log levels and environment
+ * Patterns: Singleton logger, structured JSON logging, helper function exports
+ */
+
 import winston from 'winston';
 import { config } from '@config/index';
 
@@ -97,14 +107,34 @@ const logger = winston.createLogger({
   exitOnError: false,
 });
 
-// Create a stream object with a 'write' function for Morgan middleware
+/**
+ * Stream object with write function for Morgan HTTP request logging.
+ * 
+ * Redirects Morgan's HTTP logs through Winston at 'http' level for
+ * consistent log formatting and transport handling.
+ * 
+ * @since 1.0.0
+ */
 export const logStream = {
   write: (message: string): void => {
     logger.http(message.trim());
   },
 };
 
-// Helper functions for common logging patterns
+/**
+ * Logs the start of an HTTP request with method, URL and request ID.
+ * 
+ * @param method - HTTP method (GET, POST, etc.)
+ * @param url - Request URL path
+ * @param requestId - Optional unique request identifier
+ * 
+ * @example
+ * ```typescript
+ * logRequestStart('GET', '/api/users', 'req-123');
+ * ```
+ * 
+ * @since 1.0.0
+ */
 export const logRequestStart = (method: string, url: string, requestId?: string): void => {
   logger.info('Request started', {
     method,
@@ -114,6 +144,22 @@ export const logRequestStart = (method: string, url: string, requestId?: string)
   });
 };
 
+/**
+ * Logs the completion of an HTTP request with response metrics.
+ * 
+ * @param method - HTTP method
+ * @param url - Request URL path
+ * @param statusCode - HTTP response status code
+ * @param responseTime - Request duration in milliseconds
+ * @param requestId - Optional unique request identifier
+ * 
+ * @example
+ * ```typescript
+ * logRequestEnd('GET', '/api/users', 200, 150, 'req-123');
+ * ```
+ * 
+ * @since 1.0.0
+ */
 export const logRequestEnd = (
   method: string,
   url: string,
@@ -131,6 +177,19 @@ export const logRequestEnd = (
   });
 };
 
+/**
+ * Logs application errors with stack traces and additional context.
+ * 
+ * @param error - Error object to log
+ * @param context - Additional context data to include
+ * 
+ * @example
+ * ```typescript
+ * logError(new Error('Database connection failed'), { userId: '123' });
+ * ```
+ * 
+ * @since 1.0.0
+ */
 export const logError = (error: Error, context?: Record<string, any>): void => {
   logger.error('Application error', {
     message: error.message,
@@ -141,6 +200,23 @@ export const logError = (error: Error, context?: Record<string, any>): void => {
   });
 };
 
+/**
+ * Logs external API calls with timing and error information.
+ * 
+ * @param api - API name or identifier
+ * @param method - API method or endpoint
+ * @param status - Call status (start, success, error)
+ * @param duration - Optional call duration in milliseconds
+ * @param error - Optional error object if call failed
+ * 
+ * @example
+ * ```typescript
+ * logApiCall('redis', 'get', 'success', 25);
+ * logApiCall('external-api', 'fetch-data', 'error', 5000, error);
+ * ```
+ * 
+ * @since 1.0.0
+ */
 export const logApiCall = (
   api: string,
   method: string,
@@ -164,6 +240,19 @@ export const logApiCall = (
   }
 };
 
+/**
+ * Logs business events for analytics and monitoring.
+ * 
+ * @param event - Business event name
+ * @param data - Event data and context
+ * 
+ * @example
+ * ```typescript
+ * logBusinessEvent('user_registered', { userId: '123', plan: 'premium' });
+ * ```
+ * 
+ * @since 1.0.0
+ */
 export const logBusinessEvent = (event: string, data: Record<string, any>): void => {
   logger.info('Business event', {
     event,
@@ -171,6 +260,21 @@ export const logBusinessEvent = (event: string, data: Record<string, any>): void
   });
 };
 
+/**
+ * Logs performance metrics for monitoring and alerting.
+ * 
+ * @param metric - Metric name
+ * @param value - Metric value
+ * @param unit - Unit of measurement
+ * @param context - Optional additional context
+ * 
+ * @example
+ * ```typescript
+ * logPerformanceMetric('api_response_time', 150, 'ms', { endpoint: '/users' });
+ * ```
+ * 
+ * @since 1.0.0
+ */
 export const logPerformanceMetric = (
   metric: string,
   value: number,
